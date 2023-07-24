@@ -1,6 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import 'account.dart';
+import 'package:my_app/screens/account.dart';
+import 'package:my_app/services/auth.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -10,6 +11,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final AuthService _authService = AuthService();
+  final _formKey = GlobalKey<FormState>();
+
+  String email = "";
+  String password = "";
+  String error = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,73 +68,130 @@ class _LoginState extends State<Login> {
                 ),
               ),
               SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(top: 80),
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          hintText: 'Username, Phone Number',
-                          hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 183, 182, 182),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        padding: const EdgeInsets.only(top: 80),
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: TextFormField(
+                          validator: (val) =>
+                              val!.isEmpty ? 'Enter an email' : null,
+                          onChanged: (val) {
+                            setState(() => email = val);
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Username, Phone Number',
+                            hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 183, 182, 182),
+                            ),
+                            contentPadding: const EdgeInsets.only(bottom: 1.0)
+                                .add(
+                                    const EdgeInsets.symmetric(horizontal: 10)),
+                            suffixIcon: const Align(
+                              widthFactor: 1.0,
+                              heightFactor: 1.0,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)),
                           ),
-                          contentPadding: const EdgeInsets.only(bottom: 1.0)
-                              .add(const EdgeInsets.symmetric(horizontal: 10)),
-                          suffixIcon: const Align(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
-                          ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(top: 20),
-                      margin: const EdgeInsets.symmetric(horizontal: 40),
-                      child: TextFormField(
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          hintStyle: const TextStyle(
-                            color: Color.fromARGB(255, 183, 182, 182),
+                      Container(
+                        padding: const EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: TextFormField(
+                          validator: (val) => val!.length < 6
+                              ? 'Enter an password 6+ chars long'
+                              : null,
+                          obscureText: true,
+                          onChanged: (val) {
+                            setState(() => password = val);
+                          },
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
                           ),
-                          contentPadding: const EdgeInsets.only(bottom: 1.0)
-                              .add(const EdgeInsets.symmetric(horizontal: 10)),
-                          suffixIcon: const Align(
-                            widthFactor: 1.0,
-                            heightFactor: 1.0,
+                          decoration: InputDecoration(
+                            hintText: 'Password',
+                            hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 183, 182, 182),
+                            ),
+                            contentPadding: const EdgeInsets.only(bottom: 1.0)
+                                .add(
+                                    const EdgeInsets.symmetric(horizontal: 10)),
+                            suffixIcon: const Align(
+                              widthFactor: 1.0,
+                              heightFactor: 1.0,
+                            ),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30)),
                           ),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30)),
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(right: 70),
-                      child: const Text(
-                        'Forgot password?',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 144, 140, 140),
+                      Container(
+                        margin: const EdgeInsets.only(right: 70),
+                        child: const Text(
+                          'Forgot password?',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 144, 140, 140),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: InkWell(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const AccountScreen()),
-                    );
+                  onTap: () async {
+                    if (_formKey.currentState!.validate()) {
+                      final User? result = await _authService
+                          .loginWithEmailAndPassword(email, password);
+
+                      if (result == null) {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            content: const Text('Đăng nhập thất bại'),
+                            actions: [
+                              InkWell(
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Center(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16,
+                                      vertical: 8,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: Colors.blue,
+                                    ),
+                                    child: const Text(
+                                      'Đã hiểu',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AccountScreen(),
+                          ),
+                        );
+                      }
+                    }
                   },
                   child: Container(
                     height: 40,

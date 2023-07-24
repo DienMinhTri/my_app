@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/signup.dart';
+import 'package:my_app/screens/register.dart';
 
-import 'Login.dart';
+import 'login.dart';
 
 class Welcome extends StatefulWidget {
   const Welcome({super.key});
@@ -33,8 +33,7 @@ class _WelcomeState extends State<Welcome> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const Login()),
+                    MaterialPageRoute(builder: (context) => const Login()),
                   );
                 },
                 child: Container(
@@ -62,17 +61,17 @@ class _WelcomeState extends State<Welcome> {
             InkWell(
               onTap: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SignUp()),
-                  );
+                  context,
+                  MaterialPageRoute(builder: (context) => const Register()),
+                );
               },
               child: Container(
                 height: 40,
                 width: 220,
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
-                  border: Border.all(color: const Color.fromARGB(255, 170, 170, 170)),
+                  border: Border.all(
+                      color: const Color.fromARGB(255, 170, 170, 170)),
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),
