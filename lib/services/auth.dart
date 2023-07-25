@@ -15,6 +15,7 @@ class AuthService {
       final User? user = authResult.user;
       return user;
     } catch (e) {
+      // ignore: avoid_print
       print(e.toString());
       return null;
     }
@@ -32,6 +33,7 @@ class AuthService {
 
       return _userFormFirebaseUser(user);
     } catch (e) {
+      // ignore: avoid_print
       print(e.toString());
       return null;
     }
@@ -44,6 +46,7 @@ class AuthService {
       final User? user = authResult.user;
       return _userFormFirebaseUser(user);
     } catch (e) {
+      // ignore: avoid_print
       print(e.toString());
       return null;
     }
