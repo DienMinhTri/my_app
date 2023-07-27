@@ -38,21 +38,11 @@ class _RegisterState extends State<Register> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 60),
+          padding: const EdgeInsets.symmetric(vertical: 120),
           child: Form(
             key: _formKey,
             child: Column(
               children: [
-                const Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 20, bottom: 20),
-                      child: Icon(
-                        Icons.arrow_back_ios_new,
-                      ),
-                    ),
-                  ],
-                ),
                 const Text(
                   'Sign Up!',
                   style: TextStyle(
@@ -85,108 +75,40 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.only(top: 80),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
+                  child: Form(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        TextFormFieldCustom(
+                          obscureText: false,
+                          controller: emailController,
+                          hintText: 'Email',
                           validator: (email) =>
                               email != null && !EmailValidator.validate(email)
                                   ? 'Enter a valid email'
                                   : null,
-                          controller: emailController,
-                          textInputAction: TextInputAction.next,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 20),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
-                          validator: (val) => val!.length < 6
-                              ? 'Enter an password 6+ chars long'
-                              : null,
-                          controller: passwordController,
-                          textInputAction: TextInputAction.next,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                        TextFormFieldCustom(
                           obscureText: true,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
+                          controller: passwordController,
+                          validator: (val) => val!.length < 6
+                              ? 'Enter min. 6 characters'
+                              : null,
+                          hintText: 'Password',
                         ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 20),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
+                        TextFormFieldCustom(
+                          obscureText: true,
+                          controller: confirmPasswordController,
                           validator: (value) =>
                               value != null && value.length < 6
                                   ? 'Enter min. 6 characters'
                                   : passwordController.text != value
                                       ? "Not Match"
                                       : null,
-                          controller: confirmPasswordController,
-                          textInputAction: TextInputAction.next,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          obscureText: true,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Confirm Password',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
+                          hintText: 'Confirm PassWord',
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -382,5 +304,53 @@ class _RegisterState extends State<Register> {
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+}
+
+class TextFormFieldCustom extends StatelessWidget {
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final String hintText;
+  final bool obscureText;
+
+  const TextFormFieldCustom({
+    super.key,
+    required this.controller,
+    this.validator,
+    required this.hintText,
+    required this.obscureText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      child: TextFormField(
+        obscureText: obscureText,
+        validator: validator,
+        controller: controller,
+        textInputAction: TextInputAction.next,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: Color.fromARGB(255, 183, 182, 182),
+          ),
+          contentPadding: const EdgeInsets.only(bottom: 1.0, left: 10)
+              .add(const EdgeInsets.symmetric(horizontal: 10)),
+          suffixIcon: const Align(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+      ),
+    );
   }
 }

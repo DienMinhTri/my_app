@@ -1,5 +1,6 @@
 // ignore: file_names
 // ignore_for_file: file_names, duplicate_ignore
+import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
@@ -35,21 +37,14 @@ class _LoginState extends State<Login> {
           padding: const EdgeInsets.symmetric(vertical: 60),
           child: Column(
             children: [
-              const Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 20, bottom: 100),
-                    child: Icon(
-                      Icons.arrow_back_ios_new,
-                    ),
+              const Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Text(
+                  'Welcome!',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.w900,
                   ),
-                ],
-              ),
-              const Text(
-                'Welcome!',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.w900,
                 ),
               ),
               const SizedBox(
@@ -76,73 +71,42 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
+              const SizedBox(height: 40),
               SingleChildScrollView(
                 child: Form(
+                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Container(
-                        padding: const EdgeInsets.only(top: 80),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
-                          validator: (val) =>
-                              val!.isEmpty ? 'Enter an email' : null,
-                          controller: emailController,
-                          decoration: InputDecoration(
-                            hintText: 'Email',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
+                    children: [
+                      TextFormFieldCustom(
+                        obscureText: false,
+                        controller: emailController,
+                        hintText: 'Email',
+                        validator: (email) =>
+                            email != null && !EmailValidator.validate(email)
+                                ? 'Enter a valid email'
+                                : null,
                       ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 20),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
-                          validator: (val) => val!.length < 6
-                              ? 'Enter an password 6+ chars long'
-                              : null,
-                          obscureText: true,
-                          controller: passwordController,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: 'Password',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
+                      TextFormFieldCustom(
+                        obscureText: true,
+                        controller: passwordController,
+                        hintText: 'Password',
+                        validator: (val) =>
+                            val!.length < 6 ? 'Enter min. 6 characters' : null,
                       ),
                       GestureDetector(
                         child: Container(
-                          padding: const EdgeInsets.only(right: 40),
+                          padding: const EdgeInsets.only(right: 40, top: 10),
                           child: Text(
                             'Forgot Password?',
                             style: TextStyle(
                               decoration: TextDecoration.underline,
+                              decorationThickness: 2,
+                              decorationColor:
+                                  Theme.of(context).colorScheme.secondary,
                               color: Theme.of(context).colorScheme.secondary,
-                              fontSize: 12,
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
                             ),
                           ),
                         ),
@@ -156,7 +120,7 @@ class _LoginState extends State<Login> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 50),
+                padding: const EdgeInsets.only(top: 20),
                 child: InkWell(
                   onTap: singIn,
                   child: Container(
@@ -304,7 +268,7 @@ class _LoginState extends State<Login> {
                     const TextSpan(
                         text: 'Not an account? ',
                         style: TextStyle(
-                          color: Color.fromARGB(255, 149, 149, 149))),
+                            color: Color.fromARGB(255, 149, 149, 149))),
                     TextSpan(
                       text: 'Sign Up',
                       style: const TextStyle(
@@ -313,7 +277,7 @@ class _LoginState extends State<Login> {
                         decoration: TextDecoration.underline,
                       ),
                       recognizer: TapGestureRecognizer()
-                      ..onTap = widget.onClickedSignUp,
+                        ..onTap = widget.onClickedSignUp,
                     ),
                   ],
                 ),
@@ -324,7 +288,10 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+
   Future singIn() async {
+    if (!_formKey.currentState!.validate()) return;
+
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -342,5 +309,45 @@ class _LoginState extends State<Login> {
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+}
+
+class TextFormFieldCustom extends StatelessWidget {
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
+  final String hintText;
+  final bool obscureText;
+  const TextFormFieldCustom({
+    super.key,
+    required this.controller,
+    this.validator,
+    required this.hintText,
+    required this.obscureText,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 40),
+      child: TextFormField(
+        obscureText: obscureText,
+        validator: validator,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            color: Color.fromARGB(255, 183, 182, 182),
+          ),
+          contentPadding: const EdgeInsets.only(bottom: 1.0, left: 10)
+              .add(const EdgeInsets.symmetric(horizontal: 10)),
+          suffixIcon: const Align(
+            widthFactor: 1.0,
+            heightFactor: 1.0,
+          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+        ),
+      ),
+    );
   }
 }
