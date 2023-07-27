@@ -1,22 +1,31 @@
+// ignore: file_names
+// ignore_for_file: file_names, duplicate_ignore
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/account.dart';
-import 'package:my_app/services/auth.dart';
+import '../main.dart';
+import '../services/utils.dart';
+import '../widgets/forgot_password_page.dart';
 
 class Login extends StatefulWidget {
-  const Login({super.key});
+  final VoidCallback onClickedSignUp;
+  const Login({super.key, required this.onClickedSignUp});
 
   @override
   State<Login> createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
-  final AuthService _authService = AuthService();
-  final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  String email = "";
-  String password = "";
-  String error = "";
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,6 @@ class _LoginState extends State<Login> {
               ),
               SingleChildScrollView(
                 child: Form(
-                  key: _formKey,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
@@ -79,11 +87,9 @@ class _LoginState extends State<Login> {
                         child: TextFormField(
                           validator: (val) =>
                               val!.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
+                          controller: emailController,
                           decoration: InputDecoration(
-                            hintText: 'Username, Phone Number',
+                            hintText: 'Email',
                             hintStyle: const TextStyle(
                               color: Color.fromARGB(255, 183, 182, 182),
                             ),
@@ -107,9 +113,7 @@ class _LoginState extends State<Login> {
                               ? 'Enter an password 6+ chars long'
                               : null,
                           obscureText: true,
-                          onChanged: (val) {
-                            setState(() => password = val);
-                          },
+                          controller: passwordController,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -130,14 +134,22 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(right: 70),
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 144, 140, 140),
+                      GestureDetector(
+                        child: Container(
+                          padding: const EdgeInsets.only(right: 40),
+                          child: Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Theme.of(context).colorScheme.secondary,
+                              fontSize: 12,
+                            ),
                           ),
                         ),
+                        onTap: () =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ForgotPasswordPage(),
+                        )),
                       ),
                     ],
                   ),
@@ -146,53 +158,7 @@ class _LoginState extends State<Login> {
               Padding(
                 padding: const EdgeInsets.only(top: 50),
                 child: InkWell(
-                  onTap: () async {
-                    if (_formKey.currentState!.validate()) {
-                      final User? result = await _authService
-                          .loginWithEmailAndPassword(email, password);
-
-                      if (result == null) {
-                        showDialog(
-                          context: context,
-                          builder: (context) => AlertDialog(
-                            content: const Text('Đăng nhập thất bại'),
-                            actions: [
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Center(
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 8,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.blue,
-                                    ),
-                                    child: const Text(
-                                      'Đã hiểu',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AccountScreen(),
-                          ),
-                        );
-                      }
-                    }
-                  },
+                  onTap: singIn,
                   child: Container(
                     height: 40,
                     width: 310,
@@ -330,34 +296,51 @@ class _LoginState extends State<Login> {
                   ],
                 ),
               ),
-              // RichText(
-              //   text: TextSpan(
-              //     children: [
-              //       const TextSpan(
-              //           text: 'Already a user? ',
-              //           style: TextStyle(color: Colors.black)),
-              //       TextSpan(
-              //         text: 'Login',
-              //         style: const TextStyle(
-              //           color: Colors.blue,
-              //           decoration: TextDecoration.underline,
-              //         ),
-              //         recognizer: TapGestureRecognizer()
-              //           ..onTap = () {
-              //             Navigator.push(
-              //               context,
-              //               MaterialPageRoute(
-              //                   builder: (context) => const AccountScreen()),
-              //             );
-              //           },
-              //       ),
-              //     ],
-              //   ),
-              // )
+              // ignore: prefer_const_constructors
+              SizedBox(height: 10),
+              RichText(
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                        text: 'Not an account? ',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 149, 149, 149))),
+                    TextSpan(
+                      text: 'Sign Up',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                        decoration: TextDecoration.underline,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                      ..onTap = widget.onClickedSignUp,
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
         ),
       ),
     );
+  }
+  Future singIn() async {
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(child: CircularProgressIndicator()));
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      // ignore: avoid_print
+      print(e);
+
+      Utils().showSnackBar(e.message);
+    }
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

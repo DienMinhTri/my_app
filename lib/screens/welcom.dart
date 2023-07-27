@@ -11,6 +11,8 @@ class Welcome extends StatefulWidget {
 }
 
 class _WelcomeState extends State<Welcome> {
+  get onClickedSignUp => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +35,7 @@ class _WelcomeState extends State<Welcome> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const Login()),
+                    MaterialPageRoute(builder: (context) => Login(onClickedSignUp: () { })),
                   );
                 },
                 child: Container(
@@ -62,7 +64,7 @@ class _WelcomeState extends State<Welcome> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const Register()),
+                  MaterialPageRoute(builder: (context) => Register(onClickedSignIn: () {  },)),
                 );
               },
               child: Container(

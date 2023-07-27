@@ -1,22 +1,37 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/login.dart';
-import 'package:my_app/services/auth.dart';
+
+import '../main.dart';
+import '../services/utils.dart';
 
 class Register extends StatefulWidget {
-  const Register({super.key});
+  final Function() onClickedSignIn;
+
+  const Register({
+    Key? key,
+    required this.onClickedSignIn,
+  }) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
 }
 
 class _RegisterState extends State<Register> {
-  final AuthService _authService = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
-  String email = '';
-  String password = '';
-  String error = "";
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,32 +92,13 @@ class _RegisterState extends State<Register> {
                         padding: const EdgeInsets.only(top: 80),
                         margin: const EdgeInsets.symmetric(horizontal: 40),
                         child: TextFormField(
-                          decoration: InputDecoration(
-                            hintText: 'Username, Phone Number',
-                            hintStyle: const TextStyle(
-                              color: Color.fromARGB(255, 183, 182, 182),
-                            ),
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
-                            suffixIcon: const Align(
-                              widthFactor: 1.0,
-                              heightFactor: 1.0,
-                            ),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(top: 20),
-                        margin: const EdgeInsets.symmetric(horizontal: 40),
-                        child: TextFormField(
-                          validator: (val) =>
-                              val!.isEmpty ? 'Enter an email' : null,
-                          onChanged: (val) {
-                            setState(() => email = val);
-                          },
+                          validator: (email) =>
+                              email != null && !EmailValidator.validate(email)
+                                  ? 'Enter a valid email'
+                                  : null,
+                          controller: emailController,
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
@@ -130,9 +126,9 @@ class _RegisterState extends State<Register> {
                           validator: (val) => val!.length < 6
                               ? 'Enter an password 6+ chars long'
                               : null,
-                          onChanged: (val) {
-                            setState(() => password = val);
-                          },
+                          controller: passwordController,
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
                           obscureText: true,
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
@@ -156,11 +152,37 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                       Container(
-                        margin: const EdgeInsets.only(right: 70),
-                        child: const Text(
-                          'Forgot password?',
-                          style: TextStyle(
-                            color: Color.fromARGB(255, 144, 140, 140),
+                        padding: const EdgeInsets.only(top: 20),
+                        margin: const EdgeInsets.symmetric(horizontal: 40),
+                        child: TextFormField(
+                          validator: (value) =>
+                              value != null && value.length < 6
+                                  ? 'Enter min. 6 characters'
+                                  : passwordController.text != value
+                                      ? "Not Match"
+                                      : null,
+                          controller: confirmPasswordController,
+                          textInputAction: TextInputAction.next,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          obscureText: true,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: 'Confirm Password',
+                            hintStyle: const TextStyle(
+                              color: Color.fromARGB(255, 183, 182, 182),
+                            ),
+                            contentPadding: const EdgeInsets.only(bottom: 1.0)
+                                .add(
+                                    const EdgeInsets.symmetric(horizontal: 10)),
+                            suffixIcon: const Align(
+                              widthFactor: 1.0,
+                              heightFactor: 1.0,
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
                           ),
                         ),
                       ),
@@ -170,20 +192,7 @@ class _RegisterState extends State<Register> {
                 Padding(
                   padding: const EdgeInsets.only(top: 50),
                   child: InkWell(
-                    onTap: () async {
-                      if (_formKey.currentState!.validate()) {
-                        dynamic result = await _authService
-                            .registerWithEmailAndPassword(email, password);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const Login(),
-                            ));
-                        if (result == null) {
-                          setState(() => error = 'please supply a valid email');
-                        }
-                      }
-                    },
+                    onTap: signUp,
                     child: Container(
                       height: 40,
                       width: 310,
@@ -208,10 +217,6 @@ class _RegisterState extends State<Register> {
                 const SizedBox(
                   height: 12.0,
                 ),
-                Text(
-                  error,
-                  style: const TextStyle(color: Colors.red, fontSize: 14.0),
-                ),
                 const Padding(padding: EdgeInsets.only(top: 20)),
                 Row(children: <Widget>[
                   Expanded(
@@ -230,7 +235,6 @@ class _RegisterState extends State<Register> {
                         margin: const EdgeInsets.only(left: 15.0, right: 10.0),
                         child: const Divider(
                           color: Color.fromARGB(255, 245, 84, 15),
-                          height: 30,
                           endIndent: 32,
                           thickness: 2,
                         )),
@@ -342,17 +346,11 @@ class _RegisterState extends State<Register> {
                         text: 'Login',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 149, 149, 149),
+                          color: Colors.blue,
                           decoration: TextDecoration.underline,
                         ),
                         recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()),
-                            );
-                          },
+                          ..onTap = widget.onClickedSignIn,
                       ),
                     ],
                   ),
@@ -363,5 +361,26 @@ class _RegisterState extends State<Register> {
         ),
       ),
     );
+  }
+
+  Future signUp() async {
+    final isValid = _formKey.currentState!.validate();
+    if (!isValid) return;
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
+    try {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+    } on FirebaseAuthException catch (e) {
+      Utils().showSnackBar(e.message);
+    }
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }

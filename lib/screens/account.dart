@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/screens/create.dart';
 
@@ -148,7 +149,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           padding: const EdgeInsets.only(bottom: 50),
                           iconSize: 40,
                           icon: const Icon(Icons.more_vert),
-                          onPressed: () {},
+                          onPressed: () => FirebaseAuth.instance.signOut(),
                         ),
                       ],
                     ),
