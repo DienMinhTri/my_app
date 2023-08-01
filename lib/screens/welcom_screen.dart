@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/main.dart';
 // ignore: unused_import
-import 'package:my_app/screens/register.dart';
+import 'package:my_app/screens/register_screen.dart';
 
-
-class Welcome extends StatefulWidget {
-  const Welcome({super.key});
+class WelcomeScreen extends StatefulWidget {
+  const WelcomeScreen({super.key});
 
   @override
-  State<Welcome> createState() => _WelcomeState();
+  State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeState extends State<Welcome> {
+class _WelcomeScreenState extends State<WelcomeScreen> {
   get onClickedSignUp => null;
 
   @override

@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/account.dart';
+import 'package:my_app/screens/account_screen.dart';
 import 'package:my_app/services/utils.dart';
 
 class VerifyEmail extends StatefulWidget {

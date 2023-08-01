@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/welcom.dart';
+import 'package:my_app/screens/welcom_screen.dart';
 import 'package:my_app/services/VerifyEmail.dart';
 import 'package:my_app/services/auth_path.dart';
 import 'package:my_app/services/utils.dart';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: const Welcome(),
+        home: const WelcomeScreen(),
       );
 }
 

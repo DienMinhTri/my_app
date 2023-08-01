@@ -45,6 +45,9 @@ dependencies:
   basic_utils: ^4.2.2
   email_validator: ^2.0.1
   dropdown_button2: ^1.0.0
+  firebase_storage: ^11.2.5
+  firebase_database: ^10.2.4
+  http: ^0.13.6
 
 dev_dependencies:
   flutter_test:

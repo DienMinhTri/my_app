@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/screens/login.dart';
-import 'package:my_app/screens/register.dart';
+import 'package:my_app/screens/login_screen.dart';
+import 'package:my_app/screens/register_screen.dart';
 
 class AuthPage extends StatefulWidget {
   final bool isLogin;
@@ -21,8 +21,8 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) => isLogin
-      ? Login(onClickedSignUp: toggle)
-      : Register(onClickedSignIn: toggle);
+      ? LoginScreen(onClickedSignUp: toggle)
+      : RegisterScreen(onClickedSignIn: toggle);
 
   void toggle() => setState(() => isLogin = !isLogin);
 }

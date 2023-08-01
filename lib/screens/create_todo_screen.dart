@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:my_app/screens/account.dart';
+import 'package:my_app/models/todo.dart';
+import 'package:my_app/repository/todo_repository.dart';
+import 'package:my_app/screens/account_screen.dart';
+import 'package:my_app/widgets/sub_task_widget.dart';
 
 class CreateTodoScreen extends StatefulWidget {
-  const CreateTodoScreen({super.key});
+  final Todo? todo;
+  const CreateTodoScreen({
+    super.key,
+    this.todo,
+  });
 
   @override
   State<CreateTodoScreen> createState() => _CreateTodoScreenState();
@@ -11,13 +18,35 @@ class CreateTodoScreen extends StatefulWidget {
 
 class _CreateTodoScreenState extends State<CreateTodoScreen> {
   final TextEditingController _dateController = TextEditingController();
+  final _taskNameController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  int status = 1;
+
+  final List<TextEditingController> _listSubTaskController = [];
+  final todoList = Todo.todoList();
+  Todo? todo;
 
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
     super.initState();
-    _dateController.text = '';
+    if (widget.todo != null) {
+      todo = widget.todo;
+      _dateController.text = todo?.date ?? DateTime.now().toString();
+      _taskNameController.text = todo?.todoText ?? "";
+      status = todo?.status ?? 0;
+      _descriptionController.text = todo?.description ?? "";
+      _listSubTaskController.length = todo?.countTask ?? 0;
+    } else {
+      _dateController.text = '';
+      final subTaskController = TextEditingController();
+      _listSubTaskController.add(subTaskController);
+    }
+  }
+
+  _handleAddSubTask() {
+    final subTaskController = TextEditingController();
+    _listSubTaskController.add(subTaskController);
+    setState(() {});
   }
 
   @override
@@ -27,12 +56,12 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
       final DateTime? date = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2015),
-        lastDate: DateTime(2025),
+        firstDate: DateTime(2001),
+        lastDate: DateTime(2030),
       );
 
       if (date != null) {
-        String str = DateFormat('MMM d, h:mm a').format(date);
+        String str = DateFormat('dd/MM/yyyy').format(date);
         setState(() {
           _dateController.text = str;
         });
@@ -44,7 +73,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
       appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),          
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
@@ -58,7 +87,9 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 10,),
+              const SizedBox(
+                height: 10,
+              ),
               const Divider(),
               const Text(
                 'Main task name',
@@ -71,11 +102,13 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                 alignment: Alignment.center,
                 height: 50,
                 child: TextFormField(
+                  controller: _taskNameController,
                   style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                  decoration: InputDecoration(                   
-                    contentPadding: const EdgeInsets.only(bottom: 1.0).add(const EdgeInsets.symmetric(horizontal: 10)),
+                    fontWeight: FontWeight.bold,
+                  ),
+                  decoration: InputDecoration(
+                    contentPadding: const EdgeInsets.only(bottom: 1.0)
+                        .add(const EdgeInsets.symmetric(horizontal: 10)),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)),
                   ),
@@ -101,7 +134,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                       ),
                       controller: _dateController,
                       decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(bottom: 1.0).add(const EdgeInsets.symmetric(horizontal: 10)),
+                        contentPadding: const EdgeInsets.only(bottom: 1.0)
+                            .add(const EdgeInsets.symmetric(horizontal: 10)),
                         suffixIcon: Align(
                           widthFactor: 1.0,
                           heightFactor: 1.0,
@@ -134,9 +168,19 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     MainAxisAlignment.spaceEvenly, // <-- SEE HERE
                 children: [
                   ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
+                    onPressed: () {
+                      setState(() {
+                        status = 2;
+                      });
+                    },
+                    style: ButtonStyle(
+                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                        (Set<MaterialState> states) {
+                          if (states.contains(MaterialState.pressed))
+                            return Colors.redAccent; //<-- SEE HERE
+                          return null; // Defer to the widget's default.
+                        },
+                      ),
                     ),
                     child: const Text(
                       'High',
@@ -148,7 +192,9 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      status = 1;
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 255, 187, 0),
                     ),
@@ -162,7 +208,9 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      status = 0;
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 0, 255, 4),
                     ),
@@ -178,58 +226,22 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                 ],
               ),
               Column(
+                children: List.generate(
+                  _listSubTaskController.length,
+                  (index) => SubTaskWidget(
+                    subTaskController: _listSubTaskController[index],
+                  ),
+                ),
+              ),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Sub-task name',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    child: TextFormField(
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(bottom: 1.0).add(const EdgeInsets.symmetric(horizontal: 10)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
-                  const Text(
-                    'Sub-task name',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    child: TextFormField(
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(bottom: 1.0).add(const EdgeInsets.symmetric(horizontal: 10)),
-                        suffixIcon: const Align(
-                          widthFactor: 1.0,
-                          heightFactor: 1.0,
-                        ),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
-                      ),
-                    ),
-                  ),
                   Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _handleAddSubTask();
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             const Color.fromARGB(255, 240, 178, 44),
@@ -252,14 +264,17 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     ),
                   ),
                   TextFormField(
+                    controller: _descriptionController,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      fontWeight: FontWeight.bold,
+                    ),
                     maxLength: 100,
                     maxLines: 3,
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(20))),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -268,7 +283,21 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     MainAxisAlignment.spaceEvenly, // <-- SEE HERE
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      todo = Todo(
+                        id: "",
+                        todoText: _taskNameController.text,
+                        date: _dateController.text,
+                        status: status,
+                        countTask: _listSubTaskController.length,
+                        toDoList: _listSubTaskController
+                            .map((controller) => controller.text)
+                            .toList(),
+                        description: _descriptionController.text,
+                      );
+
+                      TodoReposity().createTodo(todo!);
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 22),
@@ -287,7 +316,14 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      for (var controller in _listSubTaskController) {
+                        controller.clear();
+                      }
+                      _taskNameController.clear();
+                      _dateController.clear();
+                      _descriptionController.clear();
+                    },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                           vertical: 5, horizontal: 30),
