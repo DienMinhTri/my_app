@@ -11,7 +11,7 @@ class Todo {
   String? date;
   String? description;
   int? countTask;
-  List<String>? toDoList;
+  List<String>? subTask;
 
   Todo({
     this.id,
@@ -20,7 +20,7 @@ class Todo {
     this.date,
     this.description,
     this.countTask,
-    this.toDoList,
+    this.subTask,
   });
   Todo copyWith({
     String? id,
@@ -38,7 +38,7 @@ class Todo {
       date: date ?? this.date,
       description: description ?? this.description,
       countTask: countTask ?? this.countTask,
-      toDoList: toDoList ?? this.toDoList,
+      subTask: toDoList ?? this.subTask,
     );
   }
 
@@ -50,7 +50,7 @@ class Todo {
       'date': date,
       'description': description,
       'countTask': countTask,
-      'toDoList': toDoList,
+      'toDoList': subTask,
     };
   }
 
@@ -63,19 +63,22 @@ class Todo {
         description:
             map['description'] != null ? map['description'] as String : null,
         countTask: map['countTask'] as int,
-        toDoList: map['toDoList'] != null
-            ? List<String>.from(map['toDoList'] as List<String>)
-            : null);
+        subTask: ((map['toDoList'] ?? []) as List)
+            .map((subtask) => subtask.toString())
+            .toList());
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Todo.fromJson(String source) =>
-      Todo.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Todo.fromJson(String source) {
+    return Todo.fromMap(
+      json.decode(source) as Map<String, dynamic>,
+    );
+  }
 
   @override
   String toString() {
-    return 'Todo(id: $id, todoText: $todoText, status: $status, date: $date, description: $description, countTask: $countTask, toDoList: $toDoList)';
+    return 'Todo(id: $id, todoText: $todoText, status: $status, date: $date, description: $description, countTask: $countTask, toDoList: $subTask)';
   }
 
   @override
@@ -88,7 +91,7 @@ class Todo {
         other.date == date &&
         other.description == description &&
         other.countTask == countTask &&
-        listEquals(other.toDoList, toDoList);
+        listEquals(other.subTask, subTask);
   }
 
   @override
@@ -99,7 +102,7 @@ class Todo {
         date.hashCode ^
         description.hashCode ^
         countTask.hashCode ^
-        toDoList.hashCode;
+        subTask.hashCode;
   }
 
   Color get color {
@@ -113,45 +116,5 @@ class Todo {
       default:
         return Colors.green;
     }
-  }
-
-  static List<Todo> todoList() {
-    return [
-      Todo(
-        id: '01',
-        todoText: "Football Cup training drybling",
-        countTask: 0,
-        status: 2,
-        toDoList:[],
-      ),
-      Todo(
-        id: '02',
-        todoText: "UI/UX App Design",
-        countTask: 0,
-        status: 0,
-        toDoList: [],
-      ),
-      Todo(
-        id: '03',
-        todoText: "View condidates resumes",
-        countTask: 0,
-        status: 1,
-        toDoList: [],
-      ),
-      Todo(
-        id: '04',
-        todoText: "UI/UX App Design",
-        countTask: 0,
-        status: 0,
-        toDoList: [],
-      ),
-      Todo(
-        id: '05',
-        todoText: "View condidates resumes",
-        countTask: 0,
-        status: 1,
-        toDoList: [],
-      ),
-    ];
   }
 }

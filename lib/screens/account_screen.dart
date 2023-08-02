@@ -1,6 +1,8 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/todo.dart';
+import 'package:my_app/repository/todo_repository.dart';
 import 'package:my_app/screens/create_todo_screen.dart';
 import 'package:my_app/widgets/item_todo.dart';
 import 'package:my_app/widgets/menu_items.dart';
@@ -15,9 +17,6 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
-  final todoList = Todo.todoList();
-  List<dynamic> data = [];
-
   @override
   void initState() {
     super.initState();
@@ -34,10 +33,8 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: _buildAppBar(),
       body: SingleChildScrollView(
         child: Container(
-          // padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 15),
           padding: const EdgeInsets.only(left: 15, right: 5),
           margin: const EdgeInsets.all(5),
           child: Column(
@@ -67,7 +64,6 @@ class _AccountScreenState extends State<AccountScreen> {
                               borderRadius: BorderRadius.circular(60),
                             ),
                           ),
-                          // ignore: prefer_const_constructors
                           Expanded(
                             child: SingleChildScrollView(
                               child: Row(
@@ -193,11 +189,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                       context, value as MenuItem);
                                 },
                                 itemHeight: 40,
-                                dropdownWidth: 140,
+                                dropdownWidth: 130,
                                 dropdownPadding:
-                                    const EdgeInsets.symmetric(vertical: 6),
+                                    const EdgeInsets.symmetric(vertical: 10),
                                 dropdownDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(4),
+                                  borderRadius: BorderRadius.circular(10),
                                   border: null,
                                   color: Colors.redAccent,
                                 ),
@@ -224,19 +220,37 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   SizedBox(
                     height: 90,
-                    child: ListView.builder(
-                      itemCount: todoList.length,
-                      itemBuilder: (context, index) {
-                        return ItemTodo(
-                          title: todoList[index].todoText,
-                          countTask: (todoList[index].toDoList ?? [])
-                              .length
-                              .toString(),
-                          color: todoList[index].color,
+                    child: FutureBuilder<List<Todo>?>(
+                      future: TodoReposity().getTodo(),
+                      builder: (context, snapshot) {
+                        final List<Todo> listTodo = snapshot.data ?? [];
+
+                        if (listTodo.isEmpty) return const SizedBox();
+
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.all(5),
+                          itemCount: 3,
+                          itemBuilder: (context, index) {
+                            return ItemTodo(
+                              title: listTodo[index].todoText,
+                              color: listTodo[index].color,
+                              countTask:
+                                  listTodo[index].subTask?.length.toString(),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CreateTodoScreen(
+                                      todo: listTodo[index],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
                         );
                       },
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.all(5),
                     ),
                   ),
                   const SizedBox(
@@ -252,29 +266,39 @@ class _AccountScreenState extends State<AccountScreen> {
                   SizedBox(
                     width: 400,
                     height: 350,
-                    child: ListView.builder(
-                      itemCount: todoList.length,
-                      itemBuilder: (context, index) {
-                        return ItemTodo(
-                          title: todoList[index].todoText,
-                          color: todoList[index].color,
-                          countTask: (todoList[index].toDoList ?? [])
-                              .length
-                              .toString(),
-                          percent: '75%',
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => CreateTodoScreen(
-                                  todo: todoList[index],
-                                ),
+                    child: FutureBuilder<List<Todo>?>(
+                      future: TodoReposity().getTodo(),
+                      builder: (context, snapshot) {
+                        final List<Todo> listTodo = snapshot.data ?? [];
+
+                        if (listTodo.isEmpty) return const SizedBox();
+
+                        return ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          itemCount: listTodo.length,
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              child: ItemTodo(
+                                title: listTodo[index].todoText,
+                                color: listTodo[index].color,
+                                countTask:
+                                    listTodo[index].subTask?.length.toString(),
+                                percent: '75%',
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => CreateTodoScreen(
+                                        todo: listTodo[index],
+                                      ),
+                                    ),
+                                  );
+                                },
                               ),
                             );
                           },
                         );
                       },
-                      scrollDirection: Axis.vertical,
                     ),
                   ),
                   Container(

@@ -21,7 +21,7 @@ class ItemTodo extends StatelessWidget {
       overlayColor: MaterialStateColor.resolveWith((states) => Colors.white),
       onTap: onTap,
       child: Container(
-        width: 160,
+        width: percent != null ? null : 160,
         margin: EdgeInsets.only(
           right: 5,
           left: 5,
@@ -32,8 +32,8 @@ class ItemTodo extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+          borderRadius: BorderRadius.all(
+            Radius.circular(percent != null ? 15 : 30),
           ),
           boxShadow: [
             BoxShadow(

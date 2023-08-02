@@ -3,7 +3,9 @@ import 'package:intl/intl.dart';
 import 'package:my_app/models/todo.dart';
 import 'package:my_app/repository/todo_repository.dart';
 import 'package:my_app/screens/account_screen.dart';
+import 'package:my_app/widgets/item_priority_widget.dart';
 import 'package:my_app/widgets/sub_task_widget.dart';
+import 'package:my_app/widgets/text_style_widget.dart';
 
 class CreateTodoScreen extends StatefulWidget {
   final Todo? todo;
@@ -23,8 +25,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
   int status = 1;
 
   final List<TextEditingController> _listSubTaskController = [];
-  final todoList = Todo.todoList();
   Todo? todo;
+  final List<String> priorities = ['High', 'Medium', 'Low'];
 
   @override
   void initState() {
@@ -35,7 +37,11 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
       _taskNameController.text = todo?.todoText ?? "";
       status = todo?.status ?? 0;
       _descriptionController.text = todo?.description ?? "";
-      _listSubTaskController.length = todo?.countTask ?? 0;
+      for (var subtask in (todo?.subTask ?? [])) {
+        final subTaskController = TextEditingController();
+        subTaskController.text = subtask;
+        _listSubTaskController.add((subTaskController));
+      }
     } else {
       _dateController.text = '';
       final subTaskController = TextEditingController();
@@ -49,25 +55,24 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
     setState(() {});
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? date = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2001),
+      lastDate: DateTime(2030),
+    );
+
+    if (date != null) {
+      String str = DateFormat('dd/MM/yyyy').format(date);
+      setState(() {
+        _dateController.text = str;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // ignore: no_leading_underscores_for_local_identifiers
-    Future<void> _selectDate(BuildContext context) async {
-      final DateTime? date = await showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2001),
-        lastDate: DateTime(2030),
-      );
-
-      if (date != null) {
-        String str = DateFormat('dd/MM/yyyy').format(date);
-        setState(() {
-          _dateController.text = str;
-        });
-      }
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: _buildAppBar(),
@@ -76,12 +81,11 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 5),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              // ignore: prefer_const_constructors
+            children: [
               Center(
-                child: const Text(
-                  'Create new task',
-                  style: TextStyle(
+                child: Text(
+                  '${widget.todo != null ? 'Edit' : 'Create'} new task',
+                  style: const TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
@@ -91,12 +95,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                 height: 10,
               ),
               const Divider(),
-              const Text(
-                'Main task name',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
+              const TitleWidget(
+                title: 'Main task name',
               ),
               Container(
                 alignment: Alignment.center,
@@ -114,12 +114,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                   ),
                 ),
               ),
-              const Text(
-                'Due date',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
+              const TitleWidget(
+                title: 'Due date',
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -143,10 +139,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                             onPressed: () {
                               _selectDate(context);
                             },
-                            // ignore: prefer_const_constructors
-                            icon: Icon(Icons.calendar_month),
-                            // ignore: prefer_const_constructors
-                            color: Color.fromARGB(255, 255, 115, 0),
+                            icon: const Icon(Icons.calendar_month),
+                            color: const Color.fromARGB(255, 255, 115, 0),
                           ),
                         ),
                         border: OutlineInputBorder(
@@ -156,75 +150,30 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                   ),
                 ],
               ),
-              const Text(
-                'Choose priority',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                ),
+              const TitleWidget(
+                title: 'Choose priority',
               ),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly, // <-- SEE HERE
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        status = 2;
-                      });
-                    },
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.resolveWith<Color?>(
-                        (Set<MaterialState> states) {
-                          if (states.contains(MaterialState.pressed))
-                            return Colors.redAccent; //<-- SEE HERE
-                          return null; // Defer to the widget's default.
-                        },
-                      ),
+                  mainAxisAlignment:
+                      MainAxisAlignment.spaceEvenly, // <-- SEE HERE
+                  children: List.generate(
+                    priorities.length,
+                    (index) => ItemPriority(
+                      onPress: () {
+                        setState(() {
+                          status = index;
+                        });
+                      },
+                      title: priorities[index],
+                      color: status == index
+                          ? index == 0
+                              ? Colors.redAccent
+                              : index == 2
+                                  ? Colors.greenAccent
+                                  : Colors.orangeAccent
+                          : Colors.white,
                     ),
-                    child: const Text(
-                      'High',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      status = 1;
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 255, 187, 0),
-                    ),
-                    child: const Text(
-                      'Medium',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      status = 0;
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 0, 255, 4),
-                    ),
-                    child: const Text(
-                      'Low',
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                  )),
               Column(
                 children: List.generate(
                   _listSubTaskController.length,
@@ -256,12 +205,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                       ),
                     ),
                   ),
-                  const Text(
-                    'Description',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const TitleWidget(
+                    title: 'Description',
                   ),
                   TextFormField(
                     controller: _descriptionController,
@@ -279,8 +224,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                 ],
               ),
               Row(
-                mainAxisAlignment:
-                    MainAxisAlignment.spaceEvenly, // <-- SEE HERE
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   InkWell(
                     onTap: () {
@@ -290,7 +234,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                         date: _dateController.text,
                         status: status,
                         countTask: _listSubTaskController.length,
-                        toDoList: _listSubTaskController
+                        subTask: _listSubTaskController
                             .map((controller) => controller.text)
                             .toList(),
                         description: _descriptionController.text,
@@ -300,14 +244,16 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 22),
+                        vertical: 5,
+                        horizontal: 22,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 252, 113, 0),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: const Text(
-                        'Add task',
-                        style: TextStyle(
+                      child: Text(
+                        '${widget.todo != null ? 'Edit' : 'Add'} task',
+                        style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 14,
                           color: Colors.white,
@@ -326,7 +272,9 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     },
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 5, horizontal: 30),
+                        vertical: 5,
+                        horizontal: 30,
+                      ),
                       decoration: BoxDecoration(
                         color: const Color.fromARGB(255, 168, 168, 168),
                         borderRadius: BorderRadius.circular(20),
@@ -352,29 +300,30 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-        leading: IconButton(
+      leading: IconButton(
+        iconSize: 40,
+        icon: const Icon(Icons.navigate_before),
+        tooltip: 'Go to the next page',
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const AccountScreen()),
+          );
+        },
+      ),
+      backgroundColor: Colors.white,
+      elevation: 0,
+      actions: <Widget>[
+        IconButton(
           iconSize: 40,
-          icon: const Icon(Icons.navigate_before),
-          tooltip: 'Go to the next page',
+          icon: const Icon(Icons.more_vert),
+          tooltip: 'Show Snackbar',
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AccountScreen()),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('This is a snackbar')));
           },
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            iconSize: 40,
-            icon: const Icon(Icons.more_vert),
-            tooltip: 'Show Snackbar',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('This is a snackbar')));
-            },
-          ),
-        ]);
+      ],
+    );
   }
 }

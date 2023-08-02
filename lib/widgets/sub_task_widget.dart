@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'package:my_app/widgets/text_style_widget.dart';
 
 class SubTaskWidget extends StatelessWidget {
   final TextEditingController subTaskController;
@@ -13,12 +13,8 @@ class SubTaskWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Sub-task name',
-          style: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-          ),
+        const TitleWidget(
+          title: 'Sub-task name',
         ),
         Container(
           alignment: Alignment.center,
