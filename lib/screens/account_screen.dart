@@ -1,11 +1,9 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/todo.dart';
 import 'package:my_app/repository/todo_repository.dart';
 import 'package:my_app/screens/create_todo_screen.dart';
+import 'package:my_app/widgets/drawerController.dart';
 import 'package:my_app/widgets/item_todo.dart';
-import 'package:my_app/widgets/menu_items.dart';
 
 final List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 
@@ -17,6 +15,7 @@ class AccountScreen extends StatefulWidget {
 }
 
 class _AccountScreenState extends State<AccountScreen> {
+  final GlobalKey<ScaffoldState> _key = GlobalKey();
   @override
   void initState() {
     super.initState();
@@ -33,6 +32,9 @@ class _AccountScreenState extends State<AccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      endDrawerEnableOpenDragGesture: false,
+      key: _key,
+      endDrawer: DrawerWidget(),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 15, right: 5),
@@ -61,7 +63,7 @@ class _AccountScreenState extends State<AccountScreen> {
                               image: const DecorationImage(
                                 image: AssetImage('assets/images/avatar.jpg'),
                               ),
-                              borderRadius: BorderRadius.circular(60),
+                              shape: BoxShape.circle,
                             ),
                           ),
                           Expanded(
@@ -158,48 +160,57 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                             ),
                           ),
-                          DropdownButtonHideUnderline(
-                            child: Container(
-                              padding: const EdgeInsets.only(bottom: 50),
-                              child: DropdownButton2(
-                                customButton: const Icon(
-                                  Icons.more_vert,
-                                  size: 40,
-                                  color: Colors.black,
-                                ),
-                                customItemsHeights: null,
-                                items: [
-                                  ...MenuItems.firstItems.map(
-                                    (item) => DropdownMenuItem<MenuItem>(
-                                      value: item,
-                                      child: MenuItems.buildItem(item),
-                                    ),
-                                  ),
-                                  const DropdownMenuItem<Divider>(
-                                      enabled: false, child: Divider()),
-                                  ...MenuItems.secondItems.map(
-                                    (item) => DropdownMenuItem<MenuItem>(
-                                      value: item,
-                                      child: MenuItems.buildItem(item),
-                                    ),
-                                  ),
-                                ],
-                                onChanged: (value) {
-                                  MenuItems.onChanged(
-                                      context, value as MenuItem);
-                                },
-                                itemHeight: 40,
-                                dropdownWidth: 130,
-                                dropdownPadding:
-                                    const EdgeInsets.symmetric(vertical: 10),
-                                dropdownDecoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: null,
-                                  color: Colors.redAccent,
-                                ),
-                              ),
+                          // DropdownButtonHideUnderline(
+                          //   child: Container(
+                          //     padding: const EdgeInsets.only(bottom: 50),
+                          //     child: DropdownButton2(
+                          //       customButton: const Icon(
+                          //         Icons.more_vert,
+                          //         size: 40,
+                          //         color: Colors.black,
+                          //       ),
+                          //       customItemsHeights: null,
+                          //       items: [
+                          //         ...MenuItems.firstItems.map(
+                          //           (item) => DropdownMenuItem<MenuItem>(
+                          //             value: item,
+                          //             child: MenuItems.buildItem(item),
+                          //           ),
+                          //         ),
+                          //         const DropdownMenuItem<Divider>(
+                          //             enabled: false, child: Divider()),
+                          //         ...MenuItems.secondItems.map(
+                          //           (item) => DropdownMenuItem<MenuItem>(
+                          //             value: item,
+                          //             child: MenuItems.buildItem(item),
+                          //           ),
+                          //         ),
+                          //       ],
+                          //       onChanged: (value) {
+                          //         MenuItems.onChanged(
+                          //             context, value as MenuItem);
+                          //       },
+                          //       itemHeight: 40,
+                          //       dropdownWidth: 130,
+                          //       dropdownPadding:
+                          //           const EdgeInsets.symmetric(vertical: 10),
+                          //       dropdownDecoration: BoxDecoration(
+                          //         borderRadius: BorderRadius.circular(10),
+                          //         border: null,
+                          //         color: Colors.white,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          IconButton(
+                            onPressed: () {
+                              _key.currentState!.openEndDrawer();
+                            },
+                            icon: const Icon(
+                              Icons.more_vert,
+                              size: 40,
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -277,23 +288,107 @@ class _AccountScreenState extends State<AccountScreen> {
                           scrollDirection: Axis.vertical,
                           itemCount: listTodo.length,
                           itemBuilder: (context, index) {
-                            return GestureDetector(
-                              child: ItemTodo(
-                                title: listTodo[index].todoText,
-                                color: listTodo[index].color,
-                                countTask:
-                                    listTodo[index].subTask?.length.toString(),
-                                percent: '75%',
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => CreateTodoScreen(
-                                        todo: listTodo[index],
+                            return InkWell(
+                              onLongPress: () {
+                                showDialog<String>(
+                                  context: context,
+                                  builder: (BuildContext context) =>
+                                      AlertDialog(
+                                    title: const Text(
+                                        'Are you sure want to delete it?'),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context, 'Cancel'),
+                                        child: const Text('Cancel'),
                                       ),
-                                    ),
-                                  );
-                                },
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            TodoReposity().deleteTodo(
+                                                id: snapshot.data?[index].id ??
+                                                    "");
+                                          });
+                                          Navigator.pop(context, 'OK');
+                                        },
+                                        child: const Text('OK'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                                // showModalBottomSheet(
+                                //   backgroundColor: Colors.amber,
+                                //   context: context,
+                                //   builder: (BuildContext context) {
+                                //     return InkWell(
+                                //       onTap: () => showDialog<String>(
+                                //         context: context,
+                                //         builder: (BuildContext context) =>
+                                //             AlertDialog(
+                                //           title: const Text(
+                                //               'Are you sure want to delete it?'),
+                                //           actions: <Widget>[
+                                //             TextButton(
+                                //               onPressed: () => Navigator.pop(
+                                //                   context, 'Cancel'),
+                                //               child: const Text('Cancel'),
+                                //             ),
+                                //             TextButton(
+                                //               onPressed: () {
+                                //                 setState(() {
+                                //                   TodoReposity().deleteTodo(
+                                //                       id: snapshot.data?[index]
+                                //                               .id ??
+                                //                           "");
+                                //                 });
+                                //                 Navigator.pop(context, 'OK');
+                                //               },
+                                //               child: const Text('OK'),
+                                //             ),
+                                //           ],
+                                //         ),
+                                //       ),
+                                //       customBorder: RoundedRectangleBorder(
+                                //         borderRadius: BorderRadius.circular(30),
+                                //       ),
+                                //       child: const SizedBox(
+                                //         height: 80,
+                                //         width: 300,
+                                //         child: Center(
+                                //           child: Wrap(
+                                //             children: [
+                                //               ListTile(
+                                //                 leading: Icon(Icons.delete),
+                                //                 title: Text('Want to delete?'),
+                                //               ),
+                                //             ],
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     );
+                                //   },
+                                // );
+                              },
+                              child: GestureDetector(
+                                child: ItemTodo(
+                                  title: listTodo[index].todoText,
+                                  color: listTodo[index].color,
+                                  countTask: listTodo[index]
+                                      .subTask
+                                      ?.length
+                                      .toString(),
+                                  percent: '75%',
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => CreateTodoScreen(
+                                          todo: listTodo[index],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
                             );
                           },

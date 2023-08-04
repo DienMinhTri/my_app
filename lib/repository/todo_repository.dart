@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class TodoReposity {
   createTodo(Todo todo) async {
-    final response = await http.post(Uri.parse(baseURL + toDoURL),
+    final http.Response response = await http.post(Uri.parse(baseURL + toDoURL),
         body: json.encode(todo.toMap()));
   }
 
@@ -21,22 +21,23 @@ class TodoReposity {
         lstTodo.add(Todo.fromMap(listdata[key] as Map<String, dynamic>)
             .copyWith(id: key));
       }
-      print(lstTodo);
-    } catch (e) {
-      print('err $e');
-    }
+    } catch (e) {}
 
     return lstTodo;
   }
-  Future<Todo> deleteTodo(String id) async {
-  final response = await http.delete(
-      Uri.parse(baseURL + toDoURL),
-    );
 
-  if (response.statusCode == 200) {
-    return Todo.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to delete album.');
+  Future<void> deleteTodo({required String id}) async {
+    var url = Uri.parse('${baseURL}todo/$id.json');
+    var response = await http.delete(url);
   }
-}
+
+  Future<void> updateTodo(String id, Todo newTodo) async {
+    final url = Uri.parse('${baseURL}todo/$id.json');
+    print(url);
+    final reponse = await http.patch(
+      url,
+      body: json.encode(newTodo.toMap()),
+    );
+    print(reponse);
+  }
 }

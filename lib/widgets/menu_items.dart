@@ -14,14 +14,14 @@ class MenuItems {
     return SingleChildScrollView(
       child: Row(
         children: [
-          Icon(item.icon, color: Colors.white, size: 22),
+          Icon(item.icon, color: Colors.grey, size: 22),
           const SizedBox(
             width: 10,
           ),
           Text(
             item.text,
             style: const TextStyle(
-              color: Colors.white,
+              color: Colors.grey,
             ),
           ),
         ],

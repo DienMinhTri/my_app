@@ -38,13 +38,12 @@ class Todo {
       date: date ?? this.date,
       description: description ?? this.description,
       countTask: countTask ?? this.countTask,
-      subTask: toDoList ?? this.subTask,
+      subTask: toDoList ?? subTask,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'id': id,
       'todoText': todoText,
       'status': status,
       'date': date,
@@ -107,11 +106,11 @@ class Todo {
 
   Color get color {
     switch (status) {
-      case 0:
+      case 2:
         return Colors.green;
       case 1:
         return Colors.yellow;
-      case 2:
+      case 0:
         return Colors.red;
       default:
         return Colors.green;
