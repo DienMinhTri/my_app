@@ -13,109 +13,172 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: Colors.white,
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
-        children: [
-          UserAccountsDrawerHeader(
-            margin: const EdgeInsets.symmetric(vertical: 15),
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-            accountEmail: Container(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: const Text(
-                "dienminhtri982702@gmail.com",
-                style: TextStyle(
-                  color: Color.fromARGB(255, 113, 113, 113),
-                ),
-              ),
-            ),
-            accountName: const Padding(
-              padding: EdgeInsets.only(top: 25),
-              child: Text(
-                "Điền Minh Trí",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            currentAccountPicture: Container(
-              alignment: Alignment.centerLeft,
-              decoration: BoxDecoration(
-                border: Border.all(
-                    width: 2.5,
-                    // ignore: prefer_const_constructors
-                    color: Color.fromARGB(255, 255, 216, 86)),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/avatar.jpg'),
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.home,
-              color: Color.fromARGB(255, 63, 49, 49),
-            ),
-            title: const Text(
-              'Home',
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AccountScreen(),
-                ),
-              );
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: const Icon(
-              Icons.settings,
-              color: Color.fromARGB(255, 63, 49, 49),
-            ),
-            title: const Text(
-              'Settings and account',
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(
-              Icons.logout,
-              color: Color.fromARGB(255, 63, 49, 49),
-            ),
-            title: const Text(
-              'Log out',
-              style: TextStyle(
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            onTap: () {
-              FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const MainPage(
-                    isLogin: true,
+      child: Container(
+        color: Colors.white,
+        child: ListView(
+          children: [
+            InkWell(
+              onTap: () {},
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(10)
+                        .add(const EdgeInsets.only(left: 10)),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          alignment: Alignment.centerLeft,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                width: 2.5,
+                                // ignore: prefer_const_constructors
+                                color: Color.fromARGB(255, 255, 216, 86)),
+                            image: const DecorationImage(
+                              image: AssetImage('assets/images/avatar.jpg'),
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        const Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Điền Minh Trí",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              "dienminhtri982702@gmail.com",
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
                   ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    width: 300,
+                    height: 40,
+                    child: TextFormField(
+                      style: const TextStyle(
+                        fontSize: 10,
+                      ),
+                      decoration: InputDecoration(
+                        hintText: "Search",
+                        hintStyle: const TextStyle(
+                          fontSize: 15,
+                          color: Color.fromARGB(255, 171, 171, 171),
+                        ),
+                        prefix: Container(
+                          padding: const EdgeInsets.only(right: 5),
+                          transform: Matrix4.translationValues(0.0, 2, 0.0),
+                          child: const Icon(
+                            Icons.search,
+                            size: 13,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.home,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              title: Text(
+                'Home',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black.withOpacity(0.5),
                 ),
-              );
-            },
-          ),
-        ],
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AccountScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.person,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              title: Text(
+                'Account',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.settings,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              title: Text(
+                'Settings',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: Icon(
+                Icons.south_west,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              title: Text(
+                'Log out',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const MainPage(
+                      isLogin: true,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

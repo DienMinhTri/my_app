@@ -160,48 +160,6 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                             ),
                           ),
-                          // DropdownButtonHideUnderline(
-                          //   child: Container(
-                          //     padding: const EdgeInsets.only(bottom: 50),
-                          //     child: DropdownButton2(
-                          //       customButton: const Icon(
-                          //         Icons.more_vert,
-                          //         size: 40,
-                          //         color: Colors.black,
-                          //       ),
-                          //       customItemsHeights: null,
-                          //       items: [
-                          //         ...MenuItems.firstItems.map(
-                          //           (item) => DropdownMenuItem<MenuItem>(
-                          //             value: item,
-                          //             child: MenuItems.buildItem(item),
-                          //           ),
-                          //         ),
-                          //         const DropdownMenuItem<Divider>(
-                          //             enabled: false, child: Divider()),
-                          //         ...MenuItems.secondItems.map(
-                          //           (item) => DropdownMenuItem<MenuItem>(
-                          //             value: item,
-                          //             child: MenuItems.buildItem(item),
-                          //           ),
-                          //         ),
-                          //       ],
-                          //       onChanged: (value) {
-                          //         MenuItems.onChanged(
-                          //             context, value as MenuItem);
-                          //       },
-                          //       itemHeight: 40,
-                          //       dropdownWidth: 130,
-                          //       dropdownPadding:
-                          //           const EdgeInsets.symmetric(vertical: 10),
-                          //       dropdownDecoration: BoxDecoration(
-                          //         borderRadius: BorderRadius.circular(10),
-                          //         border: null,
-                          //         color: Colors.white,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                           IconButton(
                             onPressed: () {
                               _key.currentState!.openEndDrawer();
