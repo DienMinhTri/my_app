@@ -55,16 +55,17 @@ class Todo {
 
   factory Todo.fromMap(Map<String, dynamic> map) {
     return Todo(
-        id: map['id'] != null ? map['id'] as String : null,
-        todoText: map['todoText'] != null ? map['todoText'] as String : null,
-        status: map['status'] as int,
-        date: map['date'] != null ? map['date'] as String : null,
-        description:
-            map['description'] != null ? map['description'] as String : null,
-        countTask: map['countTask'] as int,
-        subTask: ((map['toDoList'] ?? []) as List)
-            .map((subtask) => subtask.toString())
-            .toList());
+      id: map['id'] != null ? map['id'] as String : null,
+      todoText: map['todoText'] != null ? map['todoText'] as String : null,
+      status: map['status'] as int,
+      date: map['date'] != null ? map['date'] as String : null,
+      description:
+          map['description'] != null ? map['description'] as String : null,
+      countTask: map['countTask'] as int,
+      subTask: ((map['toDoList'] ?? []) as List)
+          .map((subtask) => subtask.toString())
+          .toList(),
+    );
   }
 
   String toJson() => json.encode(toMap());

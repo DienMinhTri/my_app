@@ -81,7 +81,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 padding: const EdgeInsets.all(7),
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: const Color.fromARGB(255, 170, 170, 170)),
+                    color: const Color.fromARGB(255, 170, 170, 170),
+                  ),
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
                 ),

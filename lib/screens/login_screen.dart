@@ -111,10 +111,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-                        onTap: () =>
-                            Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ForgotPasswordPage(),
-                        )),
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const ForgotPasswordPage(),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -146,29 +147,33 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const Padding(padding: EdgeInsets.only(top: 20)),
-              Row(children: <Widget>[
-                Expanded(
-                  child: Container(
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
                       margin: const EdgeInsets.only(left: 10.0, right: 15.0),
                       child: const Divider(
                         color: Color.fromARGB(255, 245, 84, 15),
                         height: 30,
                         indent: 35,
                         thickness: 2,
-                      )),
-                ),
-                const Text("Or login with"),
-                Expanded(
-                  child: Container(
+                      ),
+                    ),
+                  ),
+                  const Text("Or login with"),
+                  Expanded(
+                    child: Container(
                       margin: const EdgeInsets.only(left: 15.0, right: 10.0),
                       child: const Divider(
                         color: Color.fromARGB(255, 245, 84, 15),
                         height: 30,
                         endIndent: 32,
                         thickness: 2,
-                      )),
-                ),
-              ]),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.only(top: 10),
                 child: Row(
@@ -179,7 +184,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 50,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color.fromARGB(255, 194, 194, 194)),
+                          color: const Color.fromARGB(255, 194, 194, 194),
+                        ),
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
                           BoxShadow(
@@ -191,23 +197,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       child: InkWell(
-                          onTap: () {},
-                          child: const CircleAvatar(
+                        onTap: () {},
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              backgroundImage:
-                                  AssetImage('assets/images/google.png'),
-                            ),
-                          )),
+                            radius: 15,
+                            backgroundImage:
+                                AssetImage('assets/images/google.png'),
+                          ),
+                        ),
+                      ),
                     ),
                     Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color.fromARGB(255, 194, 194, 194)),
+                          color: const Color.fromARGB(255, 194, 194, 194),
+                        ),
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
                           BoxShadow(
@@ -219,23 +227,25 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       child: InkWell(
-                          onTap: () {},
-                          child: const CircleAvatar(
+                        onTap: () {},
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              backgroundImage:
-                                  AssetImage('assets/images/facebook.png'),
-                            ),
-                          )),
+                            radius: 15,
+                            backgroundImage:
+                                AssetImage('assets/images/facebook.png'),
+                          ),
+                        ),
+                      ),
                     ),
                     Container(
                       width: 50,
                       height: 50,
                       decoration: BoxDecoration(
                         border: Border.all(
-                            color: const Color.fromARGB(255, 194, 194, 194)),
+                          color: const Color.fromARGB(255, 194, 194, 194),
+                        ),
                         borderRadius: BorderRadius.circular(50),
                         boxShadow: [
                           BoxShadow(
@@ -247,16 +257,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       child: InkWell(
-                          onTap: () {},
-                          child: const CircleAvatar(
+                        onTap: () {},
+                        child: const CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: CircleAvatar(
-                              backgroundColor: Colors.white,
-                              radius: 15,
-                              backgroundImage:
-                                  AssetImage('assets/images/apple-logo.png'),
-                            ),
-                          )),
+                            radius: 15,
+                            backgroundImage:
+                                AssetImage('assets/images/apple-logo.png'),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -267,9 +278,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 text: TextSpan(
                   children: [
                     const TextSpan(
-                        text: 'Not an account? ',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 149, 149, 149))),
+                      text: 'Not an account? ',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 149, 149, 149),
+                      ),
+                    ),
                     TextSpan(
                       text: 'Sign Up',
                       style: const TextStyle(
@@ -294,9 +307,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const Center(child: CircularProgressIndicator()));
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -312,4 +328,3 @@ class _LoginScreenState extends State<LoginScreen> {
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
-

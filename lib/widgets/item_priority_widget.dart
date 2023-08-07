@@ -6,12 +6,12 @@ class ItemPriority extends StatelessWidget {
   final Color color;
   final Function()? onPress;
 
-  ItemPriority({
-    Key? key,
+  const ItemPriority({
+    super.key,
     required this.title,
     required this.color,
     this.onPress,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class ItemPriority extends StatelessWidget {
         width: 80,
         decoration: BoxDecoration(
           color: color,
-          border: Border.all(width: 1, color: Colors.grey),
+          border: Border.all(color: Colors.grey),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(

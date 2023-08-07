@@ -10,9 +10,9 @@ class RegisterScreen extends StatefulWidget {
   final Function() onClickedSignIn;
 
   const RegisterScreen({
-    Key? key,
+    super.key,
     required this.onClickedSignIn,
-  }) : super(key: key);
+  });
 
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
@@ -140,28 +140,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 12.0,
                 ),
                 const Padding(padding: EdgeInsets.only(top: 20)),
-                Row(children: <Widget>[
-                  Expanded(
-                    child: Container(
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Container(
                         margin: const EdgeInsets.only(left: 10.0, right: 15.0),
                         child: const Divider(
                           color: Color.fromARGB(255, 245, 84, 15),
                           height: 30,
                           indent: 35,
                           thickness: 2,
-                        )),
-                  ),
-                  const Text("Or signup with"),
-                  Expanded(
-                    child: Container(
+                        ),
+                      ),
+                    ),
+                    const Text("Or signup with"),
+                    Expanded(
+                      child: Container(
                         margin: const EdgeInsets.only(left: 15.0, right: 10.0),
                         child: const Divider(
                           color: Color.fromARGB(255, 245, 84, 15),
                           endIndent: 32,
                           thickness: 2,
-                        )),
-                  ),
-                ]),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
                   child: Row(
@@ -172,7 +176,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: const Color.fromARGB(255, 194, 194, 194)),
+                            color: const Color.fromARGB(255, 194, 194, 194),
+                          ),
                           borderRadius: BorderRadius.circular(50),
                           boxShadow: [
                             BoxShadow(
@@ -184,23 +189,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                         child: InkWell(
-                            onTap: () {},
-                            child: const CircleAvatar(
+                          onTap: () {},
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 15,
-                                backgroundImage:
-                                    AssetImage('assets/images/google.png'),
-                              ),
-                            )),
+                              radius: 15,
+                              backgroundImage:
+                                  AssetImage('assets/images/google.png'),
+                            ),
+                          ),
+                        ),
                       ),
                       Container(
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: const Color.fromARGB(255, 194, 194, 194)),
+                            color: const Color.fromARGB(255, 194, 194, 194),
+                          ),
                           borderRadius: BorderRadius.circular(50),
                           boxShadow: [
                             BoxShadow(
@@ -212,23 +219,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                         child: InkWell(
-                            onTap: () {},
-                            child: const CircleAvatar(
+                          onTap: () {},
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 15,
-                                backgroundImage:
-                                    AssetImage('assets/images/facebook.png'),
-                              ),
-                            )),
+                              radius: 15,
+                              backgroundImage:
+                                  AssetImage('assets/images/facebook.png'),
+                            ),
+                          ),
+                        ),
                       ),
                       Container(
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
                           border: Border.all(
-                              color: const Color.fromARGB(255, 194, 194, 194)),
+                            color: const Color.fromARGB(255, 194, 194, 194),
+                          ),
                           borderRadius: BorderRadius.circular(50),
                           boxShadow: [
                             BoxShadow(
@@ -240,16 +249,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ],
                         ),
                         child: InkWell(
-                            onTap: () {},
-                            child: const CircleAvatar(
+                          onTap: () {},
+                          child: const CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: CircleAvatar(
                               backgroundColor: Colors.white,
-                              child: CircleAvatar(
-                                backgroundColor: Colors.white,
-                                radius: 15,
-                                backgroundImage:
-                                    AssetImage('assets/images/apple-logo.png'),
-                              ),
-                            )),
+                              radius: 15,
+                              backgroundImage:
+                                  AssetImage('assets/images/apple-logo.png'),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -261,9 +271,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   text: TextSpan(
                     children: [
                       const TextSpan(
-                          text: 'Already a user? ',
-                          style: TextStyle(
-                              color: Color.fromARGB(255, 149, 149, 149))),
+                        text: 'Already a user? ',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 149, 149, 149),
+                        ),
+                      ),
                       TextSpan(
                         text: 'Login',
                         style: const TextStyle(
@@ -306,4 +318,3 @@ class _RegisterScreenState extends State<RegisterScreen> {
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 }
-

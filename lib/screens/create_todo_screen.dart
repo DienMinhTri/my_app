@@ -40,10 +40,10 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
       _taskNameController.text = todo?.todoText ?? "";
       status = todo?.status ?? 0;
       _descriptionController.text = todo?.description ?? "";
-      for (var subtask in (todo?.subTask ?? [])) {
+      for (final subtask in todo?.subTask ?? []) {
         final subTaskController = TextEditingController();
         subTaskController.text = subtask;
-        _listSubTaskController.add((subTaskController));
+        _listSubTaskController.add(subTaskController);
       }
     } else {
       _dateController.text = '';
@@ -67,7 +67,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
     );
 
     if (date != null) {
-      String str = DateFormat('dd/MM/yyyy').format(date);
+      final String str = DateFormat('dd/MM/yyyy').format(date);
       setState(() {
         _dateController.text = str;
       });
@@ -93,7 +93,6 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                   padding: const EdgeInsets.only(top: 30),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       IconButton(
                         onPressed: () {
@@ -153,7 +152,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                         contentPadding: const EdgeInsets.only(bottom: 1.0)
                             .add(const EdgeInsets.symmetric(horizontal: 10)),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
@@ -161,7 +161,6 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     title: 'Due date',
                   ),
                   Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
@@ -173,9 +172,10 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                           ),
                           controller: _dateController,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.only(bottom: 1.0)
-                                .add(
-                                    const EdgeInsets.symmetric(horizontal: 10)),
+                            contentPadding:
+                                const EdgeInsets.only(bottom: 1.0).add(
+                              const EdgeInsets.symmetric(horizontal: 10),
+                            ),
                             suffixIcon: Align(
                               widthFactor: 1.0,
                               heightFactor: 1.0,
@@ -188,7 +188,8 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                               ),
                             ),
                             border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
                         ),
                       ),
@@ -198,26 +199,27 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                     title: 'Choose priority',
                   ),
                   Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceEvenly, // <-- SEE HERE
-                      children: List.generate(
-                        priorities.length,
-                        (index) => ItemPriority(
-                          onPress: () {
-                            setState(() {
-                              status = index;
-                            });
-                          },
-                          title: priorities[index],
-                          color: status == index
-                              ? index == 2
-                                  ? Colors.greenAccent
-                                  : index == 0
-                                      ? Colors.redAccent
-                                      : Colors.orangeAccent
-                              : Colors.white,
-                        ),
-                      )),
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly, // <-- SEE HERE
+                    children: List.generate(
+                      priorities.length,
+                      (index) => ItemPriority(
+                        onPress: () {
+                          setState(() {
+                            status = index;
+                          });
+                        },
+                        title: priorities[index],
+                        color: status == index
+                            ? index == 2
+                                ? Colors.greenAccent
+                                : index == 0
+                                    ? Colors.redAccent
+                                    : Colors.orangeAccent
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
                   Column(
                     children: List.generate(
                       _listSubTaskController.length,
@@ -295,7 +297,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => AccountScreen(),
+                                builder: (context) => const AccountScreen(),
                               ),
                             );
                           },
@@ -320,7 +322,7 @@ class _CreateTodoScreenState extends State<CreateTodoScreen> {
                         ),
                         InkWell(
                           onTap: () {
-                            for (var controller in _listSubTaskController) {
+                            for (final controller in _listSubTaskController) {
                               controller.clear();
                             }
                             _taskNameController.clear();

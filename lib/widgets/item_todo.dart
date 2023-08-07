@@ -40,7 +40,6 @@ class ItemTodo extends StatelessWidget {
               color: Colors.black.withOpacity(0.2),
               blurRadius: 1.0,
               spreadRadius: 1.0, // blur radius
-              offset: const Offset(0.0, 0.0),
             )
           ],
         ),
@@ -59,7 +58,8 @@ class ItemTodo extends StatelessWidget {
                           value: 0.75,
                           backgroundColor: color.withOpacity(0.5),
                           valueColor: AlwaysStoppedAnimation<Color>(
-                              color.withOpacity(0.5)),
+                            color.withOpacity(0.5),
+                          ),
                         ),
                       ),
                       Center(

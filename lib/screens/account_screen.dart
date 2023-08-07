@@ -34,7 +34,7 @@ class _AccountScreenState extends State<AccountScreen> {
     return Scaffold(
       endDrawerEnableOpenDragGesture: false,
       key: _key,
-      endDrawer: DrawerWidget(),
+      endDrawer: const DrawerWidget(),
       body: SingleChildScrollView(
         child: Container(
           padding: const EdgeInsets.only(left: 15, right: 5),
@@ -57,9 +57,10 @@ class _AccountScreenState extends State<AccountScreen> {
                             alignment: Alignment.centerLeft,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                  width: 2.5,
-                                  // ignore: prefer_const_constructors
-                                  color: Color.fromARGB(255, 255, 216, 86)),
+                                width: 2.5,
+                                // ignore: prefer_const_constructors
+                                color: Color.fromARGB(255, 255, 216, 86),
+                              ),
                               image: const DecorationImage(
                                 image: AssetImage('assets/images/avatar.jpg'),
                               ),
@@ -73,7 +74,8 @@ class _AccountScreenState extends State<AccountScreen> {
                                   SingleChildScrollView(
                                     child: Padding(
                                       padding: const EdgeInsets.symmetric(
-                                          horizontal: 20),
+                                        horizontal: 20,
+                                      ),
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
@@ -85,22 +87,28 @@ class _AccountScreenState extends State<AccountScreen> {
                                               text: const TextSpan(
                                                 children: <TextSpan>[
                                                   TextSpan(
-                                                      text: "Hello,",
-                                                      style: TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      )),
+                                                    text: "Hello,",
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
                                                   TextSpan(
-                                                      text: " Minh Trí",
-                                                      style: TextStyle(
-                                                        color: Color.fromARGB(
-                                                            255, 255, 101, 18),
-                                                        fontSize: 25,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ))
+                                                    text: " Minh Trí",
+                                                    style: TextStyle(
+                                                      color: Color.fromARGB(
+                                                        255,
+                                                        255,
+                                                        101,
+                                                        18,
+                                                      ),
+                                                      fontSize: 25,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  )
                                                 ],
                                               ),
                                             ),
@@ -109,7 +117,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                             'Manage your tasks!',
                                             style: TextStyle(
                                               color: Color.fromARGB(
-                                                  255, 171, 171, 171),
+                                                255,
+                                                171,
+                                                171,
+                                                171,
+                                              ),
                                               fontSize: 10,
                                             ),
                                           ),
@@ -127,15 +139,23 @@ class _AccountScreenState extends State<AccountScreen> {
                                                 hintStyle: const TextStyle(
                                                   fontSize: 10,
                                                   color: Color.fromARGB(
-                                                      255, 171, 171, 171),
+                                                    255,
+                                                    171,
+                                                    171,
+                                                    171,
+                                                  ),
                                                 ),
                                                 prefix: Container(
                                                   padding:
                                                       const EdgeInsets.only(
-                                                          right: 5),
+                                                    right: 5,
+                                                  ),
                                                   transform:
                                                       Matrix4.translationValues(
-                                                          0.0, 2, 0.0),
+                                                    0.0,
+                                                    2,
+                                                    0.0,
+                                                  ),
                                                   child: const Icon(
                                                     Icons.search,
                                                     size: 13,
@@ -146,9 +166,11 @@ class _AccountScreenState extends State<AccountScreen> {
                                                   horizontal: 10,
                                                 ),
                                                 border: OutlineInputBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            18)),
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                    18,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -243,17 +265,16 @@ class _AccountScreenState extends State<AccountScreen> {
                         if (listTodo.isEmpty) return const SizedBox();
 
                         return ListView.builder(
-                          scrollDirection: Axis.vertical,
                           itemCount: listTodo.length,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onLongPress: () {
                                 showDialog<String>(
                                   context: context,
-                                  builder: (BuildContext context) =>
-                                      AlertDialog(
+                                  builder: (context) => AlertDialog(
                                     title: const Text(
-                                        'Are you sure want to delete it?'),
+                                      'Are you sure want to delete it?',
+                                    ),
                                     actions: <Widget>[
                                       TextButton(
                                         onPressed: () =>
@@ -264,8 +285,9 @@ class _AccountScreenState extends State<AccountScreen> {
                                         onPressed: () {
                                           setState(() {
                                             TodoReposity().deleteTodo(
-                                                id: snapshot.data?[index].id ??
-                                                    "");
+                                              id: snapshot.data?[index].id ??
+                                                  "",
+                                            );
                                           });
                                           Navigator.pop(context, 'OK');
                                         },

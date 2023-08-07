@@ -1,9 +1,8 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+// ignore_for_file: file_names
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/main.dart';
 import 'package:my_app/screens/account_screen.dart';
-import 'package:my_app/widgets/menu_items.dart';
 
 class DrawerWidget extends StatelessWidget {
   const DrawerWidget({
@@ -13,14 +12,13 @@ class DrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
+      child: ColoredBox(
         color: Colors.white,
         child: ListView(
           children: [
             InkWell(
               onTap: () {},
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
                     margin: const EdgeInsets.all(10)
@@ -33,9 +31,10 @@ class DrawerWidget extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           decoration: BoxDecoration(
                             border: Border.all(
-                                width: 2.5,
-                                // ignore: prefer_const_constructors
-                                color: Color.fromARGB(255, 255, 216, 86)),
+                              width: 2.5,
+                              // ignore: prefer_const_constructors
+                              color: Color.fromARGB(255, 255, 216, 86),
+                            ),
                             image: const DecorationImage(
                               image: AssetImage('assets/images/avatar.jpg'),
                             ),
@@ -51,9 +50,10 @@ class DrawerWidget extends StatelessWidget {
                             Text(
                               "Điền Minh Trí",
                               style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             Text(
                               "dienminhtri982702@gmail.com",
@@ -93,7 +93,8 @@ class DrawerWidget extends StatelessWidget {
                           horizontal: 10,
                         ),
                         border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
                   ),
