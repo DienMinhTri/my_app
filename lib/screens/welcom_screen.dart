@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/main.dart';
+import 'package:my_app/screens/home_screen.dart';
 // ignore: unused_import
 import 'package:my_app/screens/register_screen.dart';
 
@@ -36,7 +36,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const MainPage(
+                      builder: (context) => const MainPageScreen(
                         isLogin: true,
                       ),
                     ),
@@ -69,7 +69,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const MainPage(
+                    builder: (context) => const MainPageScreen(
                       isLogin: false,
                     ),
                   ),

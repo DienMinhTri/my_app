@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/main.dart';
+import 'package:my_app/screens/home_screen.dart';
+
 class MenuItems {
   static const List<MenuItem> firstItems = [home, share, settings];
   static const List<MenuItem> secondItems = [logout];
@@ -44,7 +45,7 @@ class MenuItems {
         FirebaseAuth.instance.signOut();
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-            builder: (context) => const MainPage(
+            builder: (context) => const MainPageScreen(
               isLogin: true,
             ),
           ),
@@ -53,6 +54,7 @@ class MenuItems {
     }
   }
 }
+
 class MenuItem {
   final String text;
   final IconData icon;

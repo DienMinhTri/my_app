@@ -2,9 +2,13 @@
 // ignore_for_file: file_names, duplicate_ignore
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/main.dart';
+import 'package:my_app/screens/account_screen.dart';
+import 'package:my_app/services/sign_in_google.dart';
 import 'package:my_app/services/utils.dart';
 import 'package:my_app/widgets/forgot_password_page.dart';
 import 'package:my_app/widgets/text_form_field_login.dart';
@@ -18,9 +22,29 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  static Future<FirebaseApp> initializeFirebase({
+    required BuildContext context,
+  }) async {
+    final FirebaseApp firebaseApp = await Firebase.initializeApp();
+
+    User? user;
+    user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const AccountScreen(),
+        ),
+      );
+    }
+
+    return firebaseApp;
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isSigningIn = false;
 
   @override
   void dispose() {
@@ -197,7 +221,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ],
                       ),
                       child: InkWell(
-                        onTap: () {},
+                        onTap: () => Authentication().signInWithGoogle(),
                         child: const CircleAvatar(
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
@@ -326,5 +350,11 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  }
+
+  @override
+  void debugFillProperties(DiagnosticPropertiesBuilder properties) {
+    super.debugFillProperties(properties);
+    properties.add(DiagnosticsProperty<bool>('_isSigningIn', _isSigningIn));
   }
 }

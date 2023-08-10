@@ -76,29 +76,27 @@ class ItemTodo extends StatelessWidget {
                     ],
                   ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title ?? "",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                        color: Color.fromARGB(255, 0, 0, 0),
-                      ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      color: Color.fromARGB(255, 0, 0, 0),
                     ),
-                    Text(
-                      "${countTask ?? "0"} tasks",
-                      style: const TextStyle(
-                        fontSize: 10,
-                      ),
+                  ),
+                  Text(
+                    "${countTask ?? "0"} tasks",
+                    style: const TextStyle(
+                      fontSize: 10,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             Container(

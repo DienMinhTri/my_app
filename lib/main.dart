@@ -1,9 +1,7 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/screens/welcom_screen.dart';
-import 'package:my_app/services/VerifyEmail.dart';
-import 'package:my_app/services/auth_path.dart';
 import 'package:my_app/services/utils.dart';
 
 Future<void> main() async {
@@ -30,26 +28,5 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
         ),
         home: const WelcomeScreen(),
-      );
-}
-
-class MainPage extends StatelessWidget {
-  final bool isLogin;
-  const MainPage({super.key, required this.isLogin});
-
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        body: StreamBuilder<User?>(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return const VerifyEmail();
-            } else {
-              return AuthPage(
-                isLogin: isLogin,
-              );
-            }
-          },
-        ),
       );
 }

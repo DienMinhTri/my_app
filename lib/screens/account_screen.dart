@@ -296,58 +296,6 @@ class _AccountScreenState extends State<AccountScreen> {
                                     ],
                                   ),
                                 );
-                                // showModalBottomSheet(
-                                //   backgroundColor: Colors.amber,
-                                //   context: context,
-                                //   builder: (BuildContext context) {
-                                //     return InkWell(
-                                //       onTap: () => showDialog<String>(
-                                //         context: context,
-                                //         builder: (BuildContext context) =>
-                                //             AlertDialog(
-                                //           title: const Text(
-                                //               'Are you sure want to delete it?'),
-                                //           actions: <Widget>[
-                                //             TextButton(
-                                //               onPressed: () => Navigator.pop(
-                                //                   context, 'Cancel'),
-                                //               child: const Text('Cancel'),
-                                //             ),
-                                //             TextButton(
-                                //               onPressed: () {
-                                //                 setState(() {
-                                //                   TodoReposity().deleteTodo(
-                                //                       id: snapshot.data?[index]
-                                //                               .id ??
-                                //                           "");
-                                //                 });
-                                //                 Navigator.pop(context, 'OK');
-                                //               },
-                                //               child: const Text('OK'),
-                                //             ),
-                                //           ],
-                                //         ),
-                                //       ),
-                                //       customBorder: RoundedRectangleBorder(
-                                //         borderRadius: BorderRadius.circular(30),
-                                //       ),
-                                //       child: const SizedBox(
-                                //         height: 80,
-                                //         width: 300,
-                                //         child: Center(
-                                //           child: Wrap(
-                                //             children: [
-                                //               ListTile(
-                                //                 leading: Icon(Icons.delete),
-                                //                 title: Text('Want to delete?'),
-                                //               ),
-                                //             ],
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // );
                               },
                               child: GestureDetector(
                                 child: ItemTodo(
