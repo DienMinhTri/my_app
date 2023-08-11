@@ -159,15 +159,18 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 children: List.generate(
                   statusList.length,
                   (index) => ItemStatusProfile(
-                    onPress: () {},
+                    onPress: () {
+                      setState(() {
+                        status = index;
+                      });
+                    },
                     title: statusList[index],
-                    color: status == index
-                        ? index == 2
+                    isSelected: status == index,
+                    color: index == 0
+                        ? Colors.black
+                        : index == 2
                             ? Colors.orangeAccent
-                            : index == 0
-                                ? Colors.black
-                                : Colors.green
-                        : Colors.white,
+                            : Colors.green,
                   ),
                 ),
               ),

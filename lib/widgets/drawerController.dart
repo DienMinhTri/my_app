@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_app/screens/account_screen.dart';
 import 'package:my_app/screens/home_screen.dart';
 import 'package:my_app/screens/my_profile_screen.dart';
+import 'package:my_app/screens/statistic_todo_chart.dart';
 
 enum Segment {
   all,
@@ -156,6 +157,27 @@ class _DrawerWidgetState extends State<DrawerWidget>
                   context,
                   MaterialPageRoute(
                     builder: (context) => const AccountScreen(),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(
+                Icons.stacked_bar_chart,
+                color: Colors.black.withOpacity(0.5),
+              ),
+              title: Text(
+                'Statistic',
+                style: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => StatisticTodoScreen(),
                   ),
                 );
               },

@@ -60,6 +60,7 @@ dependencies:
   editable_image: ^2.0.0
   image_picker: ^1.0.2
   flutter_launcher_icons: ^0.13.1
+  syncfusion_flutter_charts: ^22.2.8
 
 
 dev_dependencies:
