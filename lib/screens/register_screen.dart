@@ -91,9 +91,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         TextFormFieldCustom(
                           obscureText: true,
                           controller: passwordController,
-                          validator: (val) => val!.length < 6
-                              ? 'Enter min. 6 characters'
-                              : null,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter your password';
+                            } else if (!RegExp("^(?=.*[A-Z]).*")
+                                .hasMatch(value)) {
+                              return 'Should contain at least one upper case';
+                            } else if (!RegExp("^(?=.*[a-z]).*")
+                                .hasMatch(value)) {
+                              return 'Should contain at least one lower case';
+                            } else if (!RegExp("^(?=.*[0-9]).*")
+                                .hasMatch(value)) {
+                              return 'Should contain at least one digit';
+                            } else if (!RegExp(
+                                    r"^(?=.*[!@#$%^&*(),.?:{}|<>]).*")
+                                .hasMatch(value)) {
+                              return 'Should contain at least one Special character';
+                            } else if (value.trim().length < 8) {
+                              return 'Must be at least 8 characters in length';
+                            }
+                            return null;
+                          },
                           hintText: 'Password',
                         ),
                         TextFormFieldCustom(
