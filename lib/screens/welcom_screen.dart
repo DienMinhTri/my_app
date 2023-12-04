@@ -16,13 +16,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.lightGreenAccent,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset('assets/images/picture.jpeg'),
+            Image.asset('assets/images/picture.png'),
             const Text(
-              "Task/Todo List & Management",
+              "HeathLife Application",
               style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.w900,

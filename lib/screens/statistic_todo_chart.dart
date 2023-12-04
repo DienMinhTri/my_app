@@ -23,6 +23,7 @@ class _StatisticTodoScreenState extends State<StatisticTodoScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      appBar: AppBar(),
       body: SfCircularChart(
         title: ChartTitle(text: 'Percentage of completing the day`s work'),
         legend:

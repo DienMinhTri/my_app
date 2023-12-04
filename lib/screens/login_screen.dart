@@ -63,7 +63,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               const Padding(
-                padding: EdgeInsets.only(top: 60),
+                padding: EdgeInsets.only(top: 100),
                 child: Text(
                   'Welcome!',
                   style: TextStyle(
@@ -73,24 +73,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(
+                height: 80,
                 child: Column(
                   children: [
                     Text(
-                      "Lorem ipsum dolor consectetur.",
+                      " The first wealth is health",
                       style: TextStyle(
                         color: Color.fromARGB(255, 144, 140, 140),
-                      ),
-                    ),
-                    Text(
-                      "Egestas arcu tortor purus.",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 144, 140, 140),
-                      ),
-                    ),
-                    Text(
-                      "Libero sit arcu sed.",
-                      style: TextStyle(
-                        color: Color.fromARGB(255, 144, 140, 140),
+                        fontSize: 25,
                       ),
                     ),
                   ],

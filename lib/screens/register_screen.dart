@@ -51,24 +51,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(
+                  height: 100,
                   child: Column(
                     children: [
                       Text(
-                        "Lorem ipsum dolor consectetur.",
+                        " Create your account",
                         style: TextStyle(
                           color: Color.fromARGB(255, 144, 140, 140),
+                          fontSize: 20,
                         ),
                       ),
                       Text(
-                        "Egestas arcu tortor purus.",
+                        " and begin a fitness journey",
                         style: TextStyle(
                           color: Color.fromARGB(255, 144, 140, 140),
+                          fontSize: 20,
                         ),
                       ),
                       Text(
-                        "Libero sit arcu sed.",
+                        " for optimal health",
                         style: TextStyle(
                           color: Color.fromARGB(255, 144, 140, 140),
+                          fontSize: 20,
                         ),
                       ),
                     ],

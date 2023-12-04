@@ -1,7 +1,11 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:my_app/models/todo.dart';
 import 'package:my_app/repository/todo_repository.dart';
 import 'package:my_app/screens/create_todo_screen.dart';
+import 'package:my_app/screens/my_profile_screen.dart';
+import 'package:my_app/screens/settings_screen.dart';
+import 'package:my_app/screens/statistic_todo_chart.dart';
 import 'package:my_app/widgets/drawerController.dart';
 import 'package:my_app/widgets/item_todo.dart';
 
@@ -218,11 +222,14 @@ class _AccountScreenState extends State<AccountScreen> {
 
                         if (listTodo.isEmpty) return const SizedBox();
 
-                        return ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.all(5),
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
+                        return CarouselSlider.builder(
+                          options: CarouselOptions(
+                            height: 80,
+                            autoPlay: true,
+                            autoPlayInterval: Duration(seconds: 3),
+                          ),
+                          itemCount: listTodo.length,
+                          itemBuilder: (context, index, realIndex) {
                             return ItemTodo(
                               title: listTodo[index].todoText,
                               color: listTodo[index].color,
@@ -256,7 +263,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   ),
                   SizedBox(
                     width: 400,
-                    height: 350,
+                    height: 450,
                     child: FutureBuilder<List<Todo>?>(
                       future: TodoReposity().getTodo(),
                       builder: (context, snapshot) {
@@ -324,44 +331,112 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Center(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const CreateTodoScreen(),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          height: 40,
-                          width: 250,
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.blue,
-                          ),
-                          child: const Text(
-                            'Create task',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
                 ],
               ),
             ],
           ),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CreateTodoScreen(),
+            ),
+          );
+        },
+        child: Icon(
+          Icons.add,
+          size: 32,
+        ),
+        backgroundColor: Colors.lightGreen,
+        foregroundColor: Colors.yellow,
+        shape: CircleBorder(),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        height: 60,
+        color: Colors.white,
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            IconButton(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AccountScreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.home,
+                color: Colors.amber,
+              ),
+              style: ButtonStyle(
+                iconSize: MaterialStatePropertyAll(30),
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.symmetric(vertical: 5)
+                  .add(EdgeInsets.only(right: 30)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const StatisticTodoScreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.bar_chart_sharp,
+                color: Colors.amber,
+              ),
+              style: ButtonStyle(
+                iconSize: MaterialStatePropertyAll(30),
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.symmetric(vertical: 5)
+                  .add(EdgeInsets.only(left: 30)),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingScreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.account_box_sharp,
+                color: Colors.amber,
+              ),
+              style: ButtonStyle(
+                iconSize: MaterialStatePropertyAll(30),
+              ),
+            ),
+            IconButton(
+              padding: EdgeInsets.symmetric(vertical: 5),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MyProfileScreen(),
+                  ),
+                );
+              },
+              icon: Icon(
+                Icons.settings,
+                color: Colors.amber,
+              ),
+              style: ButtonStyle(
+                iconSize: MaterialStatePropertyAll(30),
+              ),
+            ),
+          ],
         ),
       ),
     );
