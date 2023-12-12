@@ -3,23 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditAvatarWidget extends StatefulWidget {
-  const EditAvatarWidget({super.key});
+  final String? avatar;
+  final Function(File) hanldePickedImage;
+  const EditAvatarWidget({
+    super.key,
+    this.avatar,
+    required this.hanldePickedImage,
+  });
 
   @override
   State<EditAvatarWidget> createState() => _EditAvatarWidgetState();
 }
 
-File? _imageFile;
-final ImagePicker _picker = ImagePicker();
-
 class _EditAvatarWidgetState extends State<EditAvatarWidget> {
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+
   Future<void> takePhoto(ImageSource source) async {
     final XFile? pickedFile = await _picker.pickImage(
       source: source,
     );
-    setState(() {
-      _imageFile = File(pickedFile!.path);
-    });
+
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+
+      widget.hanldePickedImage.call(_imageFile!);
+    }
   }
 
   @override
@@ -38,10 +49,13 @@ class _EditAvatarWidgetState extends State<EditAvatarWidget> {
             ),
             image: DecorationImage(
               image: _imageFile == null
-                  ? const AssetImage('assets/images/avatar.jpg')
+                  ? widget.avatar != null
+                      ? NetworkImage(widget.avatar ?? "")
+                          as ImageProvider<Object>
+                      : const AssetImage('assets/images/avatar.jpg')
                   : FileImage(
                       File(_imageFile!.path),
-                    ) as ImageProvider<Object>,
+                    ),
             ),
             shape: BoxShape.circle,
           ),
@@ -62,7 +76,7 @@ class _EditAvatarWidgetState extends State<EditAvatarWidget> {
               size: 20.0,
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -99,7 +113,7 @@ class _EditAvatarWidgetState extends State<EditAvatarWidget> {
                 },
               ),
             ],
-          )
+          ),
         ],
       ),
     );

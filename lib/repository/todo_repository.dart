@@ -28,8 +28,8 @@ class TodoReposity {
           Todo.fromMap(listdata[key] as Map<String, dynamic>).copyWith(id: key),
         );
       }
-    
-    // ignore: empty_catches
+
+      // ignore: empty_catches
     } catch (e) {}
 
     return lstTodo;

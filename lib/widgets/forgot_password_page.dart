@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +56,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton.icon(
-                  onPressed: resetPassword,
+                  onPressed: () async => await resetPassword(context),
                   icon: const Icon(Icons.email_outlined),
                   style: const ButtonStyle(
                     backgroundColor: MaterialStatePropertyAll(Colors.orange),
@@ -62,11 +64,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   label: const Text(
                     'Reset Password',
                     style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1,
-                        fontSize: 16,
-                      ),
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ],
@@ -75,7 +77,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ),
       );
 
-  Future resetPassword() async {
+  Future<void> resetPassword(BuildContext context) async {
     showDialog(
       context: context,
       barrierDismissible: false,

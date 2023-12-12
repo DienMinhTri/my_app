@@ -29,8 +29,8 @@ class ItemStatusProfile extends StatelessWidget {
             BoxShadow(
               color: Colors.grey.withOpacity(isSelected ? 1 : 0.1),
               spreadRadius: isSelected ? 0.5 : 1,
-              blurRadius: isSelected ? 12 : 1,// changes position of shadow
-              offset: isSelected ? Offset(0, 5) : Offset(0, 0)
+              blurRadius: isSelected ? 12 : 1, // changes position of shadow
+              offset: isSelected ? Offset(0, 5) : Offset(0, 0),
             ),
           ],
         ),

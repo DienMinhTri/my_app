@@ -10,7 +10,7 @@ class TitleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 6.0, bottom: 3),
+      padding: const EdgeInsets.only(top: 6),
       child: Text(
         title,
         style: const TextStyle(

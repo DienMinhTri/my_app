@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/widgets/text_style_widget.dart';
+import 'package:sizer/sizer.dart';
 
 class SubTaskWidget extends StatelessWidget {
   final TextEditingController subTaskController;
@@ -18,7 +19,7 @@ class SubTaskWidget extends StatelessWidget {
         ),
         Container(
           alignment: Alignment.center,
-          height: 50,
+          height: 52.sp,
           child: TextFormField(
             controller: subTaskController,
             style: const TextStyle(

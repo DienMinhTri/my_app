@@ -2,7 +2,6 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/main.dart';
 import 'package:my_app/services/utils.dart';
 import 'package:my_app/widgets/text_form_field_register.dart';
 
@@ -108,8 +107,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 .hasMatch(value)) {
                               return 'Should contain at least one digit';
                             } else if (!RegExp(
-                                    r"^(?=.*[!@#$%^&*(),.?:{}|<>]).*")
-                                .hasMatch(value)) {
+                              r"^(?=.*[!@#$%^&*(),.?:{}|<>]).*",
+                            ).hasMatch(value)) {
                               return 'Should contain at least one Special character';
                             } else if (value.trim().length < 8) {
                               return 'Must be at least 8 characters in length';
@@ -207,7 +206,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               blurRadius: 0.5,
                               spreadRadius: 0.5, // blur radius
                               offset: const Offset(1.0, 2.0),
-                            )
+                            ),
                           ],
                         ),
                         child: InkWell(
@@ -237,7 +236,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               blurRadius: 0.5,
                               spreadRadius: 0.5, // blur radius
                               offset: const Offset(1.0, 2.0),
-                            )
+                            ),
                           ],
                         ),
                         child: InkWell(
@@ -267,7 +266,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               blurRadius: 0.5,
                               spreadRadius: 0.5, // blur radius
                               offset: const Offset(1.0, 2.0),
-                            )
+                            ),
                           ],
                         ),
                         child: InkWell(
@@ -310,7 +309,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -337,6 +336,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Utils().showSnackBar(e.message);
     }
 
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    GlobalKey<NavigatorState>()
+        .currentState!
+        .popUntil((route) => route.isFirst);
   }
 }

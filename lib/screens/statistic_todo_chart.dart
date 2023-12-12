@@ -22,27 +22,30 @@ class _StatisticTodoScreenState extends State<StatisticTodoScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-      appBar: AppBar(),
-      body: SfCircularChart(
-        title: ChartTitle(text: 'Percentage of completing the day`s work'),
-        legend:
-            Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),
-        tooltipBehavior: _tooltipBehavior,
-        series: <CircularSeries>[
-          DoughnutSeries<StatusProfile, String>(
-            dataSource: _chartStatus,
-            xValueMapper: (data, _) => data.statusText,
-            yValueMapper: (data, _) => data.status,
-            dataLabelSettings: DataLabelSettings(
-              isVisible: true,
-            ),
-            enableTooltip: true,
-            legendIconType: LegendIconType.diamond,
+      child: Scaffold(
+        appBar: AppBar(),
+        body: SfCircularChart(
+          title: ChartTitle(text: 'Percentage of completing the day`s work'),
+          legend: Legend(
+            isVisible: true,
+            overflowMode: LegendItemOverflowMode.wrap,
           ),
-        ],
+          tooltipBehavior: _tooltipBehavior,
+          series: <CircularSeries>[
+            DoughnutSeries<StatusProfile, String>(
+              dataSource: _chartStatus,
+              xValueMapper: (data, _) => data.statusText,
+              yValueMapper: (data, _) => data.status,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: true,
+              ),
+              enableTooltip: true,
+              legendIconType: LegendIconType.diamond,
+            ),
+          ],
+        ),
       ),
-    ));
+    );
   }
 
   List<StatusProfile> getChartStatus() {

@@ -33,14 +33,14 @@ class ItemTodo extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(
-            Radius.circular(percent != null ? 15 : 30),
+            Radius.circular(percent != null ? 15 : 20),
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.2),
               blurRadius: 1.0,
               spreadRadius: 1.0, // blur radius
-            )
+            ),
           ],
         ),
         child: Row(
@@ -72,7 +72,7 @@ class ItemTodo extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      )
+                      ),
                     ],
                   ),
             Expanded(

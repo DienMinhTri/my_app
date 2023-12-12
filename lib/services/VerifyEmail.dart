@@ -21,7 +21,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
   @override
   void initState() {
     super.initState();
-
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
     if (!isEmailVerified) {
@@ -65,7 +64,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
 
   @override
   Widget build(BuildContext context) => isEmailVerified
-      ? const AccountScreen()
+      ? AccountScreen()
       : Scaffold(
           appBar: AppBar(
             title: const Text('Verify Email'),

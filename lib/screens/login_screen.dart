@@ -1,15 +1,9 @@
-// ignore: file_names
-// ignore_for_file: file_names, duplicate_ignore
 import 'package:email_validator/email_validator.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/main.dart';
-import 'package:my_app/screens/account_screen.dart';
-import 'package:my_app/services/sign_in_google.dart';
-import 'package:my_app/services/utils.dart';
+import 'package:my_app/bloc/app_bloc.dart';
+import 'package:my_app/bloc/user_bloc.dart';
 import 'package:my_app/widgets/forgot_password_page.dart';
 import 'package:my_app/widgets/text_form_field_login.dart';
 
@@ -22,25 +16,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  static Future<FirebaseApp> initializeFirebase({
-    required BuildContext context,
-  }) async {
-    final FirebaseApp firebaseApp = await Firebase.initializeApp();
-
-    User? user;
-    user = FirebaseAuth.instance.currentUser;
-
-    if (user != null) {
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const AccountScreen(),
-        ),
-      );
-    }
-
-    return firebaseApp;
-  }
-
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -138,7 +113,17 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: const EdgeInsets.only(top: 20),
                 child: InkWell(
-                  onTap: singIn,
+                  onTap: () {
+                    if (!_formKey.currentState!.validate()) return;
+
+                    AppBloc.userBloc.add(
+                      LoginUserEvent(
+                        context: context,
+                        email: emailController.text.trim(),
+                        password: passwordController.text.trim(),
+                      ),
+                    );
+                  },
                   child: Container(
                     height: 40,
                     width: 310,
@@ -207,11 +192,18 @@ class _LoginScreenState extends State<LoginScreen> {
                             blurRadius: 0.5,
                             spreadRadius: 0.5, // blur radius
                             offset: const Offset(1.0, 2.0),
-                          )
+                          ),
                         ],
                       ),
                       child: InkWell(
-                        onTap: () => Authentication().signInWithGoogle(),
+                        onTap: () {
+                          AppBloc.userBloc.add(
+                            LoginUserEvent(
+                              context: context,
+                              isLoginGoogle: true,
+                            ),
+                          );
+                        },
                         child: const CircleAvatar(
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
@@ -223,66 +215,66 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 194, 194, 194),
-                        ),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 0.5,
-                            spreadRadius: 0.5, // blur radius
-                            offset: const Offset(1.0, 2.0),
-                          )
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () {},
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 15,
-                            backgroundImage:
-                                AssetImage('assets/images/facebook.png'),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color.fromARGB(255, 194, 194, 194),
-                        ),
-                        borderRadius: BorderRadius.circular(50),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 0.5,
-                            spreadRadius: 0.5, // blur radius
-                            offset: const Offset(1.0, 2.0),
-                          )
-                        ],
-                      ),
-                      child: InkWell(
-                        onTap: () {},
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.white,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.white,
-                            radius: 15,
-                            backgroundImage:
-                                AssetImage('assets/images/apple-logo.png'),
-                          ),
-                        ),
-                      ),
-                    ),
+                    // Container(
+                    //   width: 50,
+                    //   height: 50,
+                    //   decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //       color: const Color.fromARGB(255, 194, 194, 194),
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black.withOpacity(0.1),
+                    //         blurRadius: 0.5,
+                    //         spreadRadius: 0.5, // blur radius
+                    //         offset: const Offset(1.0, 2.0),
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   child: InkWell(
+                    //     onTap: () {},
+                    //     child: const CircleAvatar(
+                    //       backgroundColor: Colors.white,
+                    //       child: CircleAvatar(
+                    //         backgroundColor: Colors.white,
+                    //         radius: 15,
+                    //         backgroundImage:
+                    //             AssetImage('assets/images/facebook.png'),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   width: 50,
+                    //   height: 50,
+                    //   decoration: BoxDecoration(
+                    //     border: Border.all(
+                    //       color: const Color.fromARGB(255, 194, 194, 194),
+                    //     ),
+                    //     borderRadius: BorderRadius.circular(50),
+                    //     boxShadow: [
+                    //       BoxShadow(
+                    //         color: Colors.black.withOpacity(0.1),
+                    //         blurRadius: 0.5,
+                    //         spreadRadius: 0.5, // blur radius
+                    //         offset: const Offset(1.0, 2.0),
+                    //       ),
+                    //     ],
+                    //   ),
+                    //   child: InkWell(
+                    //     onTap: () {},
+                    //     child: const CircleAvatar(
+                    //       backgroundColor: Colors.white,
+                    //       child: CircleAvatar(
+                    //         backgroundColor: Colors.white,
+                    //         radius: 15,
+                    //         backgroundImage:
+                    //             AssetImage('assets/images/apple-logo.png'),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -309,37 +301,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  Future singIn() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(),
-      ),
-    );
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-    } on FirebaseAuthException catch (e) {
-      // ignore: avoid_print
-      print(e);
-
-      Utils().showSnackBar(e.message);
-    }
-
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
   @override

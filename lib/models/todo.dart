@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 class Todo {
   String? id;
+  String? userId;
   String? todoText;
   int status;
   String? date;
@@ -15,6 +16,7 @@ class Todo {
 
   Todo({
     this.id,
+    this.userId,
     this.todoText,
     required this.status,
     this.date,
@@ -24,6 +26,7 @@ class Todo {
   });
   Todo copyWith({
     String? id,
+    String? userId,
     String? todoText,
     int? status,
     String? date,
@@ -33,6 +36,7 @@ class Todo {
   }) {
     return Todo(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       todoText: todoText ?? this.todoText,
       status: status ?? this.status,
       date: date ?? this.date,
@@ -44,23 +48,26 @@ class Todo {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id': id,
       'todoText': todoText,
       'status': status,
       'date': date,
       'description': description,
       'countTask': countTask,
       'toDoList': subTask,
+      'userId': userId,
     };
   }
 
   factory Todo.fromMap(Map<String, dynamic> map) {
+    print(map['userId'] ?? "");
     return Todo(
-      id: map['id'] != null ? map['id'] as String : null,
-      todoText: map['todoText'] != null ? map['todoText'] as String : null,
+      id: map['id'] ?? "",
+      userId: map['userId'] ?? "",
+      todoText: map['todoText'] ?? "",
       status: map['status'] as int,
-      date: map['date'] != null ? map['date'] as String : null,
-      description:
-          map['description'] != null ? map['description'] as String : null,
+      date: map['date'] ?? "",
+      description: map['description'] ?? "",
       countTask: map['countTask'] as int,
       subTask: ((map['toDoList'] ?? []) as List)
           .map((subtask) => subtask.toString())
@@ -78,7 +85,7 @@ class Todo {
 
   @override
   String toString() {
-    return 'Todo(id: $id, todoText: $todoText, status: $status, date: $date, description: $description, countTask: $countTask, toDoList: $subTask)';
+    return 'Todo(id: $id, todoText: $todoText, status: $status, date: $date, description: $description, countTask: $countTask, toDoList: $subTask, userId: $userId)';
   }
 
   @override
@@ -91,6 +98,7 @@ class Todo {
         other.date == date &&
         other.description == description &&
         other.countTask == countTask &&
+        other.userId == userId &&
         listEquals(other.subTask, subTask);
   }
 
@@ -102,6 +110,7 @@ class Todo {
         date.hashCode ^
         description.hashCode ^
         countTask.hashCode ^
+        userId.hashCode ^
         subTask.hashCode;
   }
 
